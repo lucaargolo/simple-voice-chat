@@ -8,9 +8,9 @@ import de.maxhenkel.voicechat.Voicechat;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.data.MetadataSerializer;
+import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
@@ -22,9 +22,9 @@ import java.util.Set;
 public class VoiceChatResourcePack implements IResourcePack {
 
     protected String path;
-    protected ITextComponent name;
+    protected IChatComponent name;
 
-    public VoiceChatResourcePack(String path, ITextComponent name) {
+    public VoiceChatResourcePack(String path, IChatComponent name) {
         this.path = path;
         this.name = name;
     }
@@ -76,7 +76,7 @@ public class VoiceChatResourcePack implements IResourcePack {
         return ImmutableSet.of(Voicechat.MODID);
     }
 
-    private static <T extends IMetadataSection> T readMetadata(MetadataSerializer metadataSerializer, InputStream inputStream, String sectionName) {
+    private static <T extends IMetadataSection> T readMetadata(IMetadataSerializer metadataSerializer, InputStream inputStream, String sectionName) {
         JsonObject jsonobject;
         BufferedReader bufferedreader = null;
         try {
@@ -92,7 +92,7 @@ public class VoiceChatResourcePack implements IResourcePack {
 
     @Nullable
     @Override
-    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException {
+    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException {
         InputStream inputStream = get("pack.mcmeta");
         if (inputStream == null) {
             throw new FileNotFoundException("pack.mcmeta does not exist");

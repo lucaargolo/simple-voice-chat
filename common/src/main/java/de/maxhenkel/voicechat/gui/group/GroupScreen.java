@@ -16,11 +16,9 @@ import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientPlayerStateManager;
 import de.maxhenkel.voicechat.voice.client.MicrophoneActivationType;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.*;
+
+import java.util.Collections;
 
 public class GroupScreen extends IngameListScreenBase {
 
@@ -29,8 +27,8 @@ public class GroupScreen extends IngameListScreenBase {
     protected static final ResourceLocation MICROPHONE = new ResourceLocation(Voicechat.MODID, "textures/icons/microphone_button.png");
     protected static final ResourceLocation SPEAKER = new ResourceLocation(Voicechat.MODID, "textures/icons/speaker_button.png");
     protected static final ResourceLocation GROUP_HUD = new ResourceLocation(Voicechat.MODID, "textures/icons/group_hud_button.png");
-    protected static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.group.title");
-    protected static final ITextComponent LEAVE_GROUP = new TextComponentTranslation("message.voicechat.leave_group");
+    protected static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.group.title");
+    protected static final IChatComponent LEAVE_GROUP = new ChatComponentTranslation("message.voicechat.leave_group");
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 32;
@@ -56,7 +54,7 @@ public class GroupScreen extends IngameListScreenBase {
         super.initGui();
         guiLeft = guiLeft + 2;
         guiTop = 32;
-        int minUnits = MathHelper.ceil((float) (CELL_HEIGHT + 4) / (float) UNIT_SIZE);
+        int minUnits = MathHelper.ceiling_float_int((float) (CELL_HEIGHT + 4) / (float) UNIT_SIZE);
         units = Math.max(minUnits, (height - HEADER_SIZE - FOOTER_SIZE - guiTop * 2) / UNIT_SIZE);
         ySize = HEADER_SIZE + units * UNIT_SIZE + FOOTER_SIZE;
 
@@ -87,7 +85,7 @@ public class GroupScreen extends IngameListScreenBase {
             NetManager.sendToServer(new LeaveGroupPacket());
             mc.displayGuiScreen(new JoinGroupScreen());
         }, (button, mouseX, mouseY) -> {
-            drawHoveringText(LEAVE_GROUP.getUnformattedComponentText(), mouseX, mouseY);
+            drawHoveringText(Collections.singletonList(LEAVE_GROUP.getUnformattedText()), mouseX, mouseY);
         });
         addButton(leave);
 
@@ -122,14 +120,14 @@ public class GroupScreen extends IngameListScreenBase {
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        ITextComponent title;
+        IChatComponent title;
         if (group.getType().equals(Group.Type.NORMAL)) {
-            title = new TextComponentTranslation("message.voicechat.group_title", new TextComponentString(group.getName()));
+            title = new ChatComponentTranslation("message.voicechat.group_title", new ChatComponentText(group.getName()));
         } else {
-            title = new TextComponentTranslation("message.voicechat.group_type_title", new TextComponentString(group.getName()), GroupType.fromType(group.getType()).getTranslation());
+            title = new ChatComponentTranslation("message.voicechat.group_type_title", new ChatComponentText(group.getName()), GroupType.fromType(group.getType()).getTranslation());
         }
 
-        fontRenderer.drawString(title.getFormattedText(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(title.getUnformattedComponentText()) / 2, guiTop + 5, FONT_COLOR);
+        fontRendererObj.drawString(title.getFormattedText(), guiLeft + xSize / 2 - fontRendererObj.getStringWidth(title.getUnformattedText()) / 2, guiTop + 5, FONT_COLOR);
     }
 
 }

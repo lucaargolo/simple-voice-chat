@@ -3,7 +3,7 @@ package de.maxhenkel.voicechat.integration.freecam;
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.voice.client.PositionalAudioUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 
 public class FreecamUtil {
 
@@ -13,10 +13,10 @@ public class FreecamUtil {
      * @return whether freecam is currently in use
      */
     public static boolean isFreecamEnabled() {
-        if (mc.player == null) {
+        if (mc.thePlayer == null) {
             return false;
         }
-        return VoicechatClient.CLIENT_CONFIG.freecamMode.get().equals(FreecamMode.PLAYER) && !(mc.player.isSpectator() || mc.player.equals(mc.getRenderViewEntity()));
+        return VoicechatClient.CLIENT_CONFIG.freecamMode.get().equals(FreecamMode.PLAYER) && !(mc.thePlayer.isSpectator() || mc.thePlayer.equals(mc.getRenderViewEntity()));
     }
 
     /**
@@ -24,11 +24,11 @@ public class FreecamUtil {
      *
      * @return the position distances should be measured from
      */
-    public static Vec3d getReferencePoint() {
-        if (mc.player == null) {
-            return Vec3d.ZERO;
+    public static Vec3 getReferencePoint() {
+        if (mc.thePlayer == null) {
+            return new Vec3(0.0, 0.0, 0.0);
         }
-        return isFreecamEnabled() ? mc.player.getPositionEyes(1F) : PositionalAudioUtils.getCameraPosition();
+        return isFreecamEnabled() ? mc.thePlayer.getPositionEyes(1F) : PositionalAudioUtils.getCameraPosition();
     }
 
     /**
@@ -39,7 +39,7 @@ public class FreecamUtil {
      * @param pos the position to be measured
      * @return the distance to the position
      */
-    public static double getDistanceTo(Vec3d pos) {
+    public static double getDistanceTo(Vec3 pos) {
         return getReferencePoint().distanceTo(pos);
     }
 
@@ -52,7 +52,7 @@ public class FreecamUtil {
      * @param pos         the position of the audio
      * @return the resulting audio volume
      */
-    public static float getDistanceVolume(float maxDistance, Vec3d pos) {
+    public static float getDistanceVolume(float maxDistance, Vec3 pos) {
         return PositionalAudioUtils.getDistanceVolume(maxDistance, getReferencePoint(), pos);
     }
 }

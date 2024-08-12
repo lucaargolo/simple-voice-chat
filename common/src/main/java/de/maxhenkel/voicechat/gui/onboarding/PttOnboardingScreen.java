@@ -3,18 +3,18 @@ package de.maxhenkel.voicechat.gui.onboarding;
 import de.maxhenkel.voicechat.gui.widgets.KeybindButton;
 import de.maxhenkel.voicechat.voice.client.KeyEvents;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class PttOnboardingScreen extends OnboardingScreenBase {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.ptt.title").setStyle(new Style().setBold(true));
-    private static final ITextComponent DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.ptt.description");
-    private static final ITextComponent BUTTON_DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.ptt.button_description");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.ptt.title").setChatStyle(new ChatStyle().setBold(true));
+    private static final IChatComponent DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.ptt.description");
+    private static final IChatComponent BUTTON_DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.ptt.button_description");
 
     protected KeybindButton keybindButton;
 
@@ -46,7 +46,7 @@ public class PttOnboardingScreen extends OnboardingScreenBase {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderTitle(TITLE);
         renderMultilineText(DESCRIPTION);
-        fontRenderer.drawStringWithShadow(BUTTON_DESCRIPTION.getFormattedText(), width / 2 - fontRenderer.getStringWidth(BUTTON_DESCRIPTION.getUnformattedComponentText()) / 2, keybindButtonPos - fontRenderer.FONT_HEIGHT - PADDING, TEXT_COLOR);
+        fontRendererObj.drawStringWithShadow(BUTTON_DESCRIPTION.getFormattedText(), width / 2 - fontRendererObj.getStringWidth(BUTTON_DESCRIPTION.getUnformattedText()) / 2, keybindButtonPos - fontRendererObj.FONT_HEIGHT - PADDING, TEXT_COLOR);
     }
 
     @Override

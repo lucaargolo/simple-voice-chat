@@ -1,103 +1,147 @@
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: 'com.modrinth.minotaur'
-apply plugin: 'mod-update'
-
-apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
-
-processResources {
-    filesMatching('**/*.info') {
-        expand 'mod_version': mod_version,
-                'minecraft_version': minecraft_version
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
     }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
+        classpath "org.spongepowered:mixingradle:${mixingradle_version}"
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+}
+
+apply plugin: "java"
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'org.spongepowered.mixin'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = archives_base_name
+version = mod_version
+group = maven_group
+
+minecraft {
+    version = minecraft_version
+    runDir = "run"
+    mappings = minecraft_mappings
+    makeObfSourceJar = false
+}
+
+configurations {
+    shade
+    compile.extendsFrom(shade)
 }
 
 repositories {
-    maven { url = 'https://repo.spongepowered.org/maven' }
+    maven { url 'https://repo.spongepowered.org/maven/' }
+    maven {
+        name = "henkelmax.public"
+        url = 'https://maven.maxhenkel.de/repository/public'
+    }
 }
+
+def systemOs = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
 
 dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8.3-SNAPSHOT:processor'
-    minecraftLibrary 'org.spongepowered:mixin:0.8.3-SNAPSHOT'
-    shadow 'org.spongepowered:mixin:0.8.3-SNAPSHOT'
+    shade project(':api')
+    shade project(':common')
+    shade('de.maxhenkel.opus4j:opus4j:2.0.2')
+    shade('de.maxhenkel.configbuilder:configbuilder:2.0.1')
+    shade('de.maxhenkel.lame4j:lame4j:2.0.3')
+    shade('de.maxhenkel.rnnoise4j:rnnoise4j:2.0.2')
+    shade('org.concentus:Concentus:1.0-SNAPSHOT')
 
-    implementation 'org.jetbrains:annotations:23.0.0'
+    shade('org.spongepowered:mixin:0.7.10-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core'
+    }
 
-    minecraftLibrary "org.concentus:Concentus:${concentus_version}"
-    shadow "org.concentus:Concentus:${concentus_version}"
-
-    minecraftLibrary "de.maxhenkel.opus4j:opus4j:${opus4j_version}"
-    shadow "de.maxhenkel.opus4j:opus4j:${opus4j_version}"
-
-    minecraftLibrary "de.maxhenkel.rnnoise4j:rnnoise4j:${rnnoise4j_version}"
-    shadow "de.maxhenkel.rnnoise4j:rnnoise4j:${rnnoise4j_version}"
-
-    minecraftLibrary "de.maxhenkel.lame4j:lame4j:${lame4j_version}"
-    shadow "de.maxhenkel.lame4j:lame4j:${lame4j_version}"
+    if (systemOs.contains("mac")) {
+        compile 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
+        compile 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
+        compile 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+    } else if (systemOs.contains("linux")) {
+        compile 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-babric.1'
+        compile 'org.lwjgl.lwjgl:lwjgl:2.9.4-babric.1'
+        compile 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-babric.1'
+    }
 }
 
-tasks.register('generateJava', Copy) {
-    from project(':common').file('src/template/java')
-    into "${layout.buildDirectory.asFile.get()}/generated/java"
-    expand 'compatibility_version': voicechat_compatibility_version
-}
-sourceSets.main.java {
-    srcDir "${layout.buildDirectory.asFile.get()}/generated/java"
-}
-compileJava.dependsOn generateJava
-
-shadowJar {
-    relocate 'org.concentus', 'de.maxhenkel.voicechat.concentus'
-}
-
-legacy {
-    fixClasspath = false
-}
-
-mixin {
-    add sourceSets.main, "voicechat.refmap.json"
-    config "voicechat.mixins.json"
-}
-
-minecraft {
-    runs {
-        client {
-            arg '-torg.spongepowered.asm.launch.MixinTweaker'
-        }
-        server {
-            arg '-torg.spongepowered.asm.launch.MixinTweaker'
+if (systemOs.contains("mac")) {
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')
+                substitute module('org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209')
+            }
+            force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
         }
     }
+} else if (systemOs.contains("linux")) {
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209') using module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-babric.1')
+                substitute module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209') using module('org.lwjgl.lwjgl:lwjgl:2.9.4-babric.1')
+            }
+            force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-babric.1'
+        }
+    }
+}
+
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+
+        //replace version and mcversion
+        expand "version":project.version, "mcversion":project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+shadowJar {
+    dependencies {}
+    configurations = [project.configurations.shade]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    classifier ""
+}
+
+reobf {
+    shadowJar {}
 }
 
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest {
-        attributes(['FMLCorePluginContainsFMLMod': 'true',
-                    'ForceLoadAsMod'             : 'true',
-                    'TweakClass'                 : 'org.spongepowered.asm.launch.MixinTweaker',
-                    'TweakOrder'                 : '0'
-        ])
+    manifest.attributes(
+        "FMLCorePlugin" : "de.maxhenkel.voicechat.MixinLoader",
+        "ForceLoadAsMod": true,
+        "TweakOrder": 0,
+        "ModSide": "CLIENT",
+        'FMLCorePluginContainsFMLMod': true,
+        'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+        'MixinConfigs': 'voicechat.mixins.json'
+    )
+}
+
+sourceSets {
+    main {
+        ext.refMap = "voicechat.mixins.refmap.json"
     }
 }
 
-// https://stackoverflow.com/a/70151634/9889252
-idea {
-    module {
-        inheritOutputDirs = true
-    }
-}
-tasks.register('prepareAssets', Copy) {
-    group = 'build'
-    from project(":common").file('src/main/resources')
-    into project.file('build/classes/java/main')
-}
-classes.dependsOn(prepareAssets)
-
-sourceSets.each {
-    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-    it.output.resourcesDir = dir
-    it.java.destinationDirectory = dir
-}
+compileJava.options.encoding = "UTF-8"

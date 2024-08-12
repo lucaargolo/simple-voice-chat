@@ -13,7 +13,7 @@ public class GameProfileUtils {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static ResourceLocation getSkin(UUID uuid) {
-        NetHandlerPlayClient connection = mc.getConnection();
+        NetHandlerPlayClient connection = mc.getNetHandler();
         if (connection == null) {
             return DefaultPlayerSkin.getDefaultSkin(uuid);
         }

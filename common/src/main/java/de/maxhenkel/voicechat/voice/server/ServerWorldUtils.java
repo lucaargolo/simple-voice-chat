@@ -2,7 +2,7 @@ package de.maxhenkel.voicechat.voice.server;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 
 public class ServerWorldUtils {
 
-    public static Collection<EntityPlayerMP> getPlayersInRange(WorldServer level, Vec3d pos, double range, Predicate<EntityPlayerMP> filter) {
+    public static Collection<EntityPlayerMP> getPlayersInRange(WorldServer level, Vec3 pos, double range, Predicate<EntityPlayerMP> filter) {
         List<EntityPlayerMP> nearbyPlayers = new ArrayList<>();
         List<EntityPlayer> players = level.playerEntities;
         for (int i = 0; i < players.size(); i++) {
@@ -24,7 +24,7 @@ public class ServerWorldUtils {
         return nearbyPlayers;
     }
 
-    public static boolean isInRange(Vec3d pos1, Vec3d pos2, double range) {
+    public static boolean isInRange(Vec3 pos1, Vec3 pos2, double range) {
         return pos1.squareDistanceTo(pos2) <= range * range;
     }
 

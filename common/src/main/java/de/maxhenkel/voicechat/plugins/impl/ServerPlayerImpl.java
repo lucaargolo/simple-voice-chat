@@ -17,6 +17,6 @@ public class ServerPlayerImpl extends PlayerImpl implements ServerPlayer {
 
     @Override
     public ServerLevel getServerLevel() {
-        return new ServerLevelImpl((WorldServer) entity.world);
+        return new ServerLevelImpl((WorldServer) entity.worldObj);
     }
 }

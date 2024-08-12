@@ -1,23 +1,23 @@
 package de.maxhenkel.voicechat.voice.common;
 
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
 
-    protected Vec3d location;
+    protected Vec3 location;
     protected float distance;
 
-    public LocationSoundPacket(UUID channelId, UUID sender, Vec3d location, byte[] data, long sequenceNumber, float distance, @Nullable String category) {
+    public LocationSoundPacket(UUID channelId, UUID sender, Vec3 location, byte[] data, long sequenceNumber, float distance, @Nullable String category) {
         super(channelId, sender, data, sequenceNumber, category);
         this.location = location;
         this.distance = distance;
     }
 
-    public LocationSoundPacket(UUID channelId, UUID sender, short[] data, Vec3d location, float distance, @Nullable String category) {
+    public LocationSoundPacket(UUID channelId, UUID sender, short[] data, Vec3 location, float distance, @Nullable String category) {
         super(channelId, sender, data, category);
         this.location = location;
         this.distance = distance;
@@ -27,7 +27,7 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
 
     }
 
-    public Vec3d getLocation() {
+    public Vec3 getLocation() {
         return location;
     }
 
@@ -38,16 +38,16 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
     @Override
     public LocationSoundPacket fromBytes(PacketBuffer buf) {
         LocationSoundPacket soundPacket = new LocationSoundPacket();
-        soundPacket.channelId = buf.readUniqueId();
-        soundPacket.sender = buf.readUniqueId();
-        soundPacket.location = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        soundPacket.channelId = buf.readUuid();
+        soundPacket.sender = buf.readUuid();
+        soundPacket.location = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         soundPacket.data = buf.readByteArray();
         soundPacket.sequenceNumber = buf.readLong();
         soundPacket.distance = buf.readFloat();
 
         byte data = buf.readByte();
         if (hasFlag(data, HAS_CATEGORY_MASK)) {
-            soundPacket.category = buf.readString(16);
+            soundPacket.category = buf.readStringFromBuffer(16);
         }
 
         return soundPacket;
@@ -55,11 +55,11 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
 
     @Override
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(channelId);
-        buf.writeUniqueId(sender);
-        buf.writeDouble(location.x);
-        buf.writeDouble(location.y);
-        buf.writeDouble(location.z);
+        buf.writeUuid(channelId);
+        buf.writeUuid(sender);
+        buf.writeDouble(location.xCoord);
+        buf.writeDouble(location.yCoord);
+        buf.writeDouble(location.zCoord);
         buf.writeByteArray(data);
         buf.writeLong(sequenceNumber);
         buf.writeFloat(distance);

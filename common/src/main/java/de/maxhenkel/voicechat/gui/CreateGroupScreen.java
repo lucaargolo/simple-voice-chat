@@ -7,8 +7,8 @@ import de.maxhenkel.voicechat.net.NetManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -16,12 +16,12 @@ import java.io.IOException;
 public class CreateGroupScreen extends VoiceChatScreenBase {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID, "textures/gui/gui_create_group.png");
-    private static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.create_group.title");
-    private static final ITextComponent CREATE = new TextComponentTranslation("message.voicechat.create");
-    private static final ITextComponent CREATE_GROUP = new TextComponentTranslation("message.voicechat.create_group");
-    private static final ITextComponent GROUP_NAME = new TextComponentTranslation("message.voicechat.group_name");
-    private static final ITextComponent OPTIONAL_PASSWORD = new TextComponentTranslation("message.voicechat.optional_password");
-    private static final ITextComponent GROUP_TYPE = new TextComponentTranslation("message.voicechat.group_type");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.create_group.title");
+    private static final IChatComponent CREATE = new ChatComponentTranslation("message.voicechat.create");
+    private static final IChatComponent CREATE_GROUP = new ChatComponentTranslation("message.voicechat.create_group");
+    private static final IChatComponent GROUP_NAME = new ChatComponentTranslation("message.voicechat.group_name");
+    private static final IChatComponent OPTIONAL_PASSWORD = new ChatComponentTranslation("message.voicechat.optional_password");
+    private static final IChatComponent GROUP_TYPE = new ChatComponentTranslation("message.voicechat.group_type");
 
     private GuiTextField groupName;
     private GuiTextField password;
@@ -43,19 +43,19 @@ public class CreateGroupScreen extends VoiceChatScreenBase {
 
         Keyboard.enableRepeatEvents(true);
 
-        groupName = new GuiTextField(0, fontRenderer, guiLeft + 7, guiTop + 32, xSize - 7 * 2, 10);
+        groupName = new GuiTextField(0, fontRendererObj, guiLeft + 7, guiTop + 32, xSize - 7 * 2, 10);
         groupName.setMaxStringLength(24);
         groupName.setValidator(s -> s.isEmpty() || Voicechat.GROUP_REGEX.matcher(s).matches());
 
-        password = new GuiTextField(1, fontRenderer, guiLeft + 7, guiTop + 58, xSize - 7 * 2, 10);
+        password = new GuiTextField(1, fontRendererObj, guiLeft + 7, guiTop + 58, xSize - 7 * 2, 10);
         password.setMaxStringLength(32);
         password.setValidator(s -> s.isEmpty() || Voicechat.GROUP_REGEX.matcher(s).matches());
 
-        groupTypeButton = new ButtonBase(2, guiLeft + 6, guiTop + 71, xSize - 12, 20, GROUP_TYPE.getUnformattedComponentText() + ": " + groupType.getTranslation().getUnformattedComponentText()) {
+        groupTypeButton = new ButtonBase(2, guiLeft + 6, guiTop + 71, xSize - 12, 20, GROUP_TYPE.getUnformattedText() + ": " + groupType.getTranslation().getUnformattedText()) {
             @Override
             public void onPress() {
                 groupType = GroupType.values()[(groupType.ordinal() + 1) % GroupType.values().length];
-                displayString = GROUP_TYPE.getUnformattedComponentText() + ": " + groupType.getTranslation().getUnformattedComponentText();
+                displayString = GROUP_TYPE.getUnformattedText() + ": " + groupType.getTranslation().getUnformattedText();
             }
         };
         addButton(groupTypeButton);
@@ -105,12 +105,12 @@ public class CreateGroupScreen extends VoiceChatScreenBase {
         }
         groupName.drawTextBox();
         password.drawTextBox();
-        fontRenderer.drawString(CREATE_GROUP.getUnformattedComponentText(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(CREATE_GROUP.getUnformattedComponentText()) / 2, guiTop + 7, FONT_COLOR);
-        fontRenderer.drawString(GROUP_NAME.getUnformattedComponentText(), guiLeft + 8, guiTop + 7 + fontRenderer.FONT_HEIGHT + 5, FONT_COLOR);
-        fontRenderer.drawString(OPTIONAL_PASSWORD.getUnformattedComponentText(), guiLeft + 8, guiTop + 7 + (fontRenderer.FONT_HEIGHT + 5) * 2 + 10 + 2, FONT_COLOR);
+        fontRendererObj.drawString(CREATE_GROUP.getUnformattedText(), guiLeft + xSize / 2 - fontRendererObj.getStringWidth(CREATE_GROUP.getUnformattedText()) / 2, guiTop + 7, FONT_COLOR);
+        fontRendererObj.drawString(GROUP_NAME.getUnformattedText(), guiLeft + 8, guiTop + 7 + fontRendererObj.FONT_HEIGHT + 5, FONT_COLOR);
+        fontRendererObj.drawString(OPTIONAL_PASSWORD.getUnformattedText(), guiLeft + 8, guiTop + 7 + (fontRendererObj.FONT_HEIGHT + 5) * 2 + 10 + 2, FONT_COLOR);
 
-        if (mouseX >= groupTypeButton.x && mouseY >= groupTypeButton.y && mouseX < groupTypeButton.x + groupTypeButton.width && mouseY < groupTypeButton.y + groupTypeButton.height) {
-            drawHoveringText(mc.fontRenderer.listFormattedStringToWidth(groupType.getDescription().getUnformattedComponentText(), 200), mouseX, mouseY);
+        if (mouseX >= groupTypeButton.xPosition && mouseY >= groupTypeButton.yPosition && mouseX < groupTypeButton.xPosition + groupTypeButton.width && mouseY < groupTypeButton.yPosition + groupTypeButton.height) {
+            drawHoveringText(mc.fontRendererObj.listFormattedStringToWidth(groupType.getDescription().getUnformattedText(), 200), mouseX, mouseY);
         }
     }
 

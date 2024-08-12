@@ -8,7 +8,7 @@ import de.maxhenkel.voicechat.net.SecretPacket;
 import de.maxhenkel.voicechat.plugins.PluginManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.*;
+import net.minecraft.util.*;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -38,20 +38,20 @@ public class ServerVoiceEvents {
             clientCompatibilities.put(player.getUniqueID(), packet.getCompatibilityVersion());
             if (packet.getCompatibilityVersion() != Voicechat.COMPATIBILITY_VERSION) {
                 Voicechat.LOGGER.warn("Connected client {} has incompatible voice chat version (server={}, client={})", player.getDisplayNameString(), Voicechat.COMPATIBILITY_VERSION, packet.getCompatibilityVersion());
-                player.sendMessage(getIncompatibleMessage(packet.getCompatibilityVersion()));
+                player.addChatMessage(getIncompatibleMessage(packet.getCompatibilityVersion()));
             } else {
                 initializePlayerConnection(player);
             }
         });
     }
 
-    public ITextComponent getIncompatibleMessage(int clientCompatibilityVersion) {
+    public IChatComponent getIncompatibleMessage(int clientCompatibilityVersion) {
         if (clientCompatibilityVersion <= 6) {
-            return new TextComponentString(String.format(Voicechat.TRANSLATIONS.voicechatNotCompatibleMessage.get(), CommonCompatibilityManager.INSTANCE.getModVersion(), CommonCompatibilityManager.INSTANCE.getModName()));
+            return new ChatComponentText(String.format(Voicechat.TRANSLATIONS.voicechatNotCompatibleMessage.get(), CommonCompatibilityManager.INSTANCE.getModVersion(), CommonCompatibilityManager.INSTANCE.getModName()));
         } else {
-            return new TextComponentTranslation("message.voicechat.incompatible_version",
-                    new TextComponentString(CommonCompatibilityManager.INSTANCE.getModVersion()).setStyle((new Style()).setColor(TextFormatting.BOLD)),
-                    new TextComponentString(CommonCompatibilityManager.INSTANCE.getModName()).setStyle((new Style()).setColor(TextFormatting.BOLD)));
+            return new ChatComponentTranslation("message.voicechat.incompatible_version",
+                    new ChatComponentText(CommonCompatibilityManager.INSTANCE.getModVersion()).setChatStyle((new ChatStyle()).setColor(EnumChatFormatting.BOLD)),
+                    new ChatComponentText(CommonCompatibilityManager.INSTANCE.getModName()).setChatStyle((new ChatStyle()).setColor(EnumChatFormatting.BOLD)));
         }
     }
 
@@ -121,13 +121,13 @@ public class ServerVoiceEvents {
                 if (serverPlayer.mcServer.isServerStopped()) {
                     return;
                 }
-                if (!serverPlayer.connection.netManager.isChannelOpen()) {
+                if (!serverPlayer.playerNetServerHandler.netManager.isChannelOpen()) {
                     return;
                 }
                 if (!isCompatible(serverPlayer)) {
                     serverPlayer.mcServer.addScheduledTask(() -> {
-                        serverPlayer.connection.disconnect(
-                                new TextComponentString(String.format(
+                        serverPlayer.playerNetServerHandler.onDisconnect(
+                                new ChatComponentText(String.format(
                                         Voicechat.TRANSLATIONS.forceVoicechatKickMessage.get(),
                                         CommonCompatibilityManager.INSTANCE.getModName(),
                                         CommonCompatibilityManager.INSTANCE.getModVersion()

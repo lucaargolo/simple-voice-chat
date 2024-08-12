@@ -1,8 +1,8 @@
 package de.maxhenkel.voicechat.net;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,7 +23,7 @@ public class ForgeNetworkEvents {
         clientPackets.put(channel.toString(), event);
     }
 
-    public static boolean onCustomPayloadServer(CPacketCustomPayload packet, EntityPlayerMP player) {
+    public static boolean onCustomPayloadServer(C17PacketCustomPayload packet, EntityPlayerMP player) {
         ServerCustomPayloadEvent event = serverPackets.get(packet.getChannelName());
         if (event != null) {
             event.onCustomPayload(packet, player);
@@ -33,7 +33,7 @@ public class ForgeNetworkEvents {
     }
 
     @SideOnly(Side.CLIENT)
-    public static boolean onCustomPayloadClient(SPacketCustomPayload packet) {
+    public static boolean onCustomPayloadClient(S3FPacketCustomPayload packet) {
         ClientCustomPayloadEvent event = clientPackets.get(packet.getChannelName());
         if (event != null) {
             event.onCustomPayload(packet);
@@ -43,11 +43,11 @@ public class ForgeNetworkEvents {
     }
 
     public interface ServerCustomPayloadEvent {
-        void onCustomPayload(CPacketCustomPayload packet, EntityPlayerMP player);
+        void onCustomPayload(C17PacketCustomPayload packet, EntityPlayerMP player);
     }
 
     public interface ClientCustomPayloadEvent {
-        void onCustomPayload(SPacketCustomPayload packet);
+        void onCustomPayload(S3FPacketCustomPayload packet);
     }
 
 }

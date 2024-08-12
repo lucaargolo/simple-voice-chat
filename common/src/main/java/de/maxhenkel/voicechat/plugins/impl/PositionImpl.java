@@ -1,38 +1,38 @@
 package de.maxhenkel.voicechat.plugins.impl;
 
 import de.maxhenkel.voicechat.api.Position;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 
 import java.util.Objects;
 
 public class PositionImpl implements Position {
 
-    private final Vec3d position;
+    private final Vec3 position;
 
-    public PositionImpl(Vec3d position) {
+    public PositionImpl(Vec3 position) {
         this.position = position;
     }
 
     public PositionImpl(double x, double y, double z) {
-        this.position = new Vec3d(x, y, z);
+        this.position = new Vec3(x, y, z);
     }
 
     @Override
     public double getX() {
-        return position.x;
+        return position.xCoord;
     }
 
     @Override
     public double getY() {
-        return position.y;
+        return position.yCoord;
     }
 
     @Override
     public double getZ() {
-        return position.z;
+        return position.zCoord;
     }
 
-    public Vec3d getPosition() {
+    public Vec3 getPosition() {
         return position;
     }
 

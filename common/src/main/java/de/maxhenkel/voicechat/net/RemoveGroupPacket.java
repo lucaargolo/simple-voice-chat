@@ -30,13 +30,13 @@ public class RemoveGroupPacket implements Packet<RemoveGroupPacket> {
 
     @Override
     public RemoveGroupPacket fromBytes(PacketBuffer buf) {
-        groupId = buf.readUniqueId();
+        groupId = buf.readUuid();
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(groupId);
+        buf.writeUuid(groupId);
     }
 
 }

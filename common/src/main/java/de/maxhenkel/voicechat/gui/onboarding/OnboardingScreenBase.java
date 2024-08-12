@@ -3,8 +3,8 @@ package de.maxhenkel.voicechat.gui.onboarding;
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import de.maxhenkel.voicechat.gui.widgets.ListScreenBase;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -19,9 +19,9 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
      */
     private static final int MAX_CONTENT_WIDTH = 396;
 
-    public static final ITextComponent NEXT = new TextComponentTranslation("message.voicechat.onboarding.next");
-    public static final ITextComponent BACK = new TextComponentTranslation("message.voicechat.onboarding.back");
-    public static final ITextComponent CANCEL = new TextComponentTranslation("message.voicechat.onboarding.cancel");
+    public static final IChatComponent NEXT = new ChatComponentTranslation("message.voicechat.onboarding.next");
+    public static final IChatComponent BACK = new ChatComponentTranslation("message.voicechat.onboarding.back");
+    public static final IChatComponent CANCEL = new ChatComponentTranslation("message.voicechat.onboarding.cancel");
 
     protected static final int TEXT_COLOR = 0xFFFFFFFF;
     protected static final int PADDING = 8;
@@ -36,7 +36,7 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
     @Nullable
     protected GuiScreen previous;
 
-    public OnboardingScreenBase(ITextComponent title, @Nullable GuiScreen previous) {
+    public OnboardingScreenBase(IChatComponent title, @Nullable GuiScreen previous) {
         super(title);
         this.previous = previous;
     }
@@ -56,7 +56,7 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
         return null;
     }
 
-    protected void addPositiveButton(int id, ITextComponent text, Consumer<ButtonBase> onPress) {
+    protected void addPositiveButton(int id, IChatComponent text, Consumer<ButtonBase> onPress) {
         ButtonBase nextButton = new ButtonBase(id, guiLeft + contentWidth / 2 + PADDING / 2, guiTop + contentHeight - BUTTON_HEIGHT, contentWidth / 2 - PADDING / 2, BUTTON_HEIGHT, text) {
             @Override
             public void onPress() {
@@ -64,6 +64,7 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
             }
         };
         addButton(nextButton);
+
     }
 
     protected void addNextButton(int id) {
@@ -73,7 +74,7 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
     }
 
     protected void addBackOrCancelButton(int id, boolean big) {
-        ITextComponent text = CANCEL;
+        IChatComponent text = CANCEL;
         if (previous instanceof OnboardingScreenBase) {
             text = BACK;
         }
@@ -90,17 +91,17 @@ public abstract class OnboardingScreenBase extends ListScreenBase {
         addBackOrCancelButton(id, false);
     }
 
-    protected void renderTitle(ITextComponent titleComponent) {
-        int titleWidth = fontRenderer.getStringWidth(titleComponent.getUnformattedComponentText());
-        fontRenderer.drawStringWithShadow(titleComponent.getFormattedText(), width / 2 - titleWidth / 2, guiTop, TEXT_COLOR);
+    protected void renderTitle(IChatComponent titleComponent) {
+        int titleWidth = fontRendererObj.getStringWidth(titleComponent.getUnformattedText());
+        fontRendererObj.drawStringWithShadow(titleComponent.getFormattedText(), width / 2 - titleWidth / 2, guiTop, TEXT_COLOR);
     }
 
-    protected void renderMultilineText(ITextComponent textComponent) {
-        List<String> text = fontRenderer.listFormattedStringToWidth(textComponent.getFormattedText(), contentWidth).stream().flatMap(string -> Arrays.stream(string.split("\\\\n"))).collect(Collectors.toList());
+    protected void renderMultilineText(IChatComponent textComponent) {
+        List<String> text = fontRendererObj.listFormattedStringToWidth(textComponent.getFormattedText(), contentWidth).stream().flatMap(string -> Arrays.stream(string.split("\\\\n"))).collect(Collectors.toList());
 
         for (int i = 0; i < text.size(); i++) {
             String line = text.get(i);
-            fontRenderer.drawStringWithShadow(line, width / 2 - fontRenderer.getStringWidth(line) / 2, guiTop + fontRenderer.FONT_HEIGHT + 20 + i * (fontRenderer.FONT_HEIGHT + 1), TEXT_COLOR);
+            fontRendererObj.drawStringWithShadow(line, width / 2 - fontRendererObj.getStringWidth(line) / 2, guiTop + fontRendererObj.FONT_HEIGHT + 20 + i * (fontRendererObj.FONT_HEIGHT + 1), TEXT_COLOR);
         }
     }
 

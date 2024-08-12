@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'maven-publish'
 }
 
-sourceCompatibility = JavaLanguageVersion.of(8)
-targetCompatibility = JavaLanguageVersion.of(8)
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 archivesBaseName = archives_base_name
-version = version
+version = api_version
 group = maven_group
 
 repositories {
@@ -18,16 +17,14 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-tasks.register('packageJavadoc', Jar) {
-    dependsOn 'javadoc'
+task packageJavadoc(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
-    archiveClassifier = 'javadoc'
+    classifier = 'javadoc'
 }
 
-tasks.register('packageSources', Jar) {
-    dependsOn 'classes'
+task packageSources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
-    archiveClassifier = 'sources'
+    classifier = 'sources'
 }
 
 javadoc {
@@ -35,35 +32,4 @@ javadoc {
     options.windowTitle = "Simple Voice Chat API"
 }
 
-artifacts {
-    archives packageJavadoc
-    archives packageSources
-}
-
-publishing {
-    publications {
-        voiceChatApi(MavenPublication) {
-            artifactId archives_base_name
-            artifact(jar.archivePath) {
-                builtBy build
-                classifier null
-            }
-            artifact packageJavadoc
-            artifact packageSources
-        }
-    }
-    repositories {
-        maven {
-            name = 'henkelmax.public'
-            url = 'https://maven.maxhenkel.de/repository/public'
-            credentials {
-                username System.getenv('MAVEN_USERNAME')
-                password System.getenv('MAVEN_PASSWORD')
-            }
-        }
-    }
-}
-
-task prepareWorkspace {
-
-}
+compileJava.options.encoding = "UTF-8"

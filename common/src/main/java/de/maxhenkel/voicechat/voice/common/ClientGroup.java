@@ -50,11 +50,11 @@ public class ClientGroup {
     }
 
     public static ClientGroup fromBytes(PacketBuffer buf) {
-        return new ClientGroup(buf.readUniqueId(), buf.readString(512), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), GroupImpl.TypeImpl.fromInt(buf.readShort()));
+        return new ClientGroup(buf.readUuid(), buf.readStringFromBuffer(512), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), GroupImpl.TypeImpl.fromInt(buf.readShort()));
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(id);
+        buf.writeUuid(id);
         buf.writeString(name);
         buf.writeBoolean(hasPassword);
         buf.writeBoolean(persistent);

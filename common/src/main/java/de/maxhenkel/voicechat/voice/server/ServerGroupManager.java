@@ -10,7 +10,8 @@ import de.maxhenkel.voicechat.permission.PermissionManager;
 import de.maxhenkel.voicechat.plugins.PluginManager;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ServerGroupManager {
                 return;
             }
             if (!PermissionManager.INSTANCE.GROUPS_PERMISSION.hasPermission(player)) {
-                player.sendStatusMessage(new TextComponentTranslation("message.voicechat.no_group_permission"), true);
+                player.playerNetServerHandler.sendPacket(new S02PacketChat(new ChatComponentTranslation("message.voicechat.no_group_permission"), (byte) 2));
                 return;
             }
             joinGroup(groups.get(packet.getGroup()), player, packet.getPassword());
@@ -43,11 +44,11 @@ public class ServerGroupManager {
                 return;
             }
             if (!PermissionManager.INSTANCE.GROUPS_PERMISSION.hasPermission(player)) {
-                player.sendStatusMessage(new TextComponentTranslation("message.voicechat.no_group_permission"), true);
+                player.playerNetServerHandler.sendPacket(new S02PacketChat(new ChatComponentTranslation("message.voicechat.no_group_permission"), (byte) 2));
                 return;
             }
             if (!Voicechat.GROUP_REGEX.matcher(packet.getName()).matches()) {
-                Voicechat.LOGGER.warn("Player {} tried to create a group with an invalid name: {}", player.getDisplayName().getUnformattedComponentText(), packet.getName());
+                Voicechat.LOGGER.warn("Player {} tried to create a group with an invalid name: {}", player.getDisplayName().getUnformattedText(), packet.getName());
                 return;
             }
             addGroup(new Group(UUID.randomUUID(), packet.getName(), packet.getPassword(), false, false, packet.getType()), player);
@@ -58,7 +59,7 @@ public class ServerGroupManager {
     }
 
     public void onPlayerCompatibilityCheckSucceeded(EntityPlayerMP player) {
-        Voicechat.LOGGER.debug("Synchronizing {} groups with {}", groups.size(), player.getDisplayName().getUnformattedComponentText());
+        Voicechat.LOGGER.debug("Synchronizing {} groups with {}", groups.size(), player.getDisplayName().getUnformattedText());
         for (Group category : groups.values()) {
             broadcastAddGroup(category);
         }
@@ -159,12 +160,12 @@ public class ServerGroupManager {
 
     private void broadcastAddGroup(Group group) {
         AddGroupPacket packet = new AddGroupPacket(group.toClientGroup());
-        server.getServer().getPlayerList().getPlayers().forEach(p -> NetManager.sendToClient(p, packet));
+        server.getServer().getConfigurationManager().getPlayerList().forEach(p -> NetManager.sendToClient(p, packet));
     }
 
     private void broadcastRemoveGroup(UUID group) {
         RemoveGroupPacket packet = new RemoveGroupPacket(group);
-        server.getServer().getPlayerList().getPlayers().forEach(p -> NetManager.sendToClient(p, packet));
+        server.getServer().getConfigurationManager().getPlayerList().forEach(p -> NetManager.sendToClient(p, packet));
     }
 
     @Nullable

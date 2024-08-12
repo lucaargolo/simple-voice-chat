@@ -8,8 +8,8 @@ import de.maxhenkel.voicechat.voice.common.ClientGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -17,10 +17,10 @@ import java.io.IOException;
 public class EnterPasswordScreen extends VoiceChatScreenBase {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID, "textures/gui/gui_enter_password.png");
-    private static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.enter_password.title");
-    private static final ITextComponent JOIN_GROUP = new TextComponentTranslation("message.voicechat.join_group");
-    private static final ITextComponent ENTER_GROUP_PASSWORD = new TextComponentTranslation("message.voicechat.enter_group_password");
-    private static final ITextComponent PASSWORD = new TextComponentTranslation("message.voicechat.password");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.enter_password.title");
+    private static final IChatComponent JOIN_GROUP = new ChatComponentTranslation("message.voicechat.join_group");
+    private static final IChatComponent ENTER_GROUP_PASSWORD = new ChatComponentTranslation("message.voicechat.enter_group_password");
+    private static final IChatComponent PASSWORD = new ChatComponentTranslation("message.voicechat.password");
 
     private GuiTextField password;
     private ButtonBase joinGroup;
@@ -40,7 +40,7 @@ public class EnterPasswordScreen extends VoiceChatScreenBase {
 
         Keyboard.enableRepeatEvents(true);
 
-        password = new GuiTextField(0, fontRenderer, guiLeft + 7, guiTop + 7 + (fontRenderer.FONT_HEIGHT + 5) * 2 - 5 + 2, xSize - 7 * 2, 10);
+        password = new GuiTextField(0, fontRendererObj, guiLeft + 7, guiTop + 7 + (fontRendererObj.FONT_HEIGHT + 5) * 2 - 5 + 2, xSize - 7 * 2, 10);
         password.setMaxStringLength(32);
         password.setValidator(s -> s.isEmpty() || Voicechat.GROUP_REGEX.matcher(s).matches());
 
@@ -86,8 +86,8 @@ public class EnterPasswordScreen extends VoiceChatScreenBase {
         if (password != null) {
             password.drawTextBox();
         }
-        fontRenderer.drawString(ENTER_GROUP_PASSWORD.getUnformattedComponentText(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(ENTER_GROUP_PASSWORD.getUnformattedComponentText()) / 2, guiTop + 7, FONT_COLOR);
-        fontRenderer.drawString(PASSWORD.getUnformattedComponentText(), guiLeft + 8, guiTop + 7 + fontRenderer.FONT_HEIGHT + 5, FONT_COLOR);
+        fontRendererObj.drawString(ENTER_GROUP_PASSWORD.getUnformattedText(), guiLeft + xSize / 2 - fontRendererObj.getStringWidth(ENTER_GROUP_PASSWORD.getUnformattedText()) / 2, guiTop + 7, FONT_COLOR);
+        fontRendererObj.drawString(PASSWORD.getUnformattedText(), guiLeft + 8, guiTop + 7 + fontRendererObj.FONT_HEIGHT + 5, FONT_COLOR);
     }
 
     @Override

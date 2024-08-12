@@ -3,7 +3,7 @@ package de.maxhenkel.voicechat.mixin;
 import de.maxhenkel.voicechat.net.ForgeNetworkEvents;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class NetHandlerPlayServerMixin {
 
     @Shadow
-    public EntityPlayerMP player;
+    public EntityPlayerMP playerEntity;
 
-    @Inject(method = "processCustomPayload", at = @At("HEAD"), cancellable = true)
-    private void processCustomPayload(CPacketCustomPayload packet, CallbackInfo ci) {
-        if (ForgeNetworkEvents.onCustomPayloadServer(packet, player)) {
+    @Inject(method = "processVanilla250Packet", at = @At("HEAD"), cancellable = true)
+    private void processCustomPayload(C17PacketCustomPayload packet, CallbackInfo ci) {
+        if (ForgeNetworkEvents.onCustomPayloadServer(packet, playerEntity)) {
             ci.cancel();
         }
     }

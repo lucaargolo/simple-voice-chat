@@ -50,11 +50,11 @@ public class VolumeCategoryImpl implements VolumeCategory {
     }
 
     public static VolumeCategoryImpl fromBytes(PacketBuffer buf) {
-        String id = buf.readString(16);
-        String name = buf.readString(16);
+        String id = buf.readStringFromBuffer(16);
+        String name = buf.readStringFromBuffer(16);
         String description = null;
         if (buf.readBoolean()) {
-            description = buf.readString(32767);
+            description = buf.readStringFromBuffer(32767);
         }
         int[][] icon = null;
         if (buf.readBoolean()) {

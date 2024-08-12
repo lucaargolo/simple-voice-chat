@@ -186,7 +186,7 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
         if (server == null) {
             return null;
         }
-        EntityPlayerMP player = server.getServer().getPlayerList().getPlayerByUUID(playerUuid);
+        EntityPlayerMP player = server.getServer().getConfigurationManager().getPlayerByUUID(playerUuid);
         if (player == null) {
             return null;
         }

@@ -5,18 +5,14 @@ import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.*;
 
 import javax.annotation.Nullable;
 
 public class VoiceActivationSlider extends DebouncedSlider implements MicTestButton.MicListener {
 
     private static final ResourceLocation SLIDER = new ResourceLocation(Voicechat.MODID, "textures/gui/voice_activation_slider.png");
-    private static final ITextComponent NO_ACTIVATION = new TextComponentTranslation("message.voicechat.voice_activation.disabled").setStyle(new Style().setColor(TextFormatting.RED));
+    private static final IChatComponent NO_ACTIVATION = new ChatComponentTranslation("message.voicechat.voice_activation.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
 
     private double micValue;
 
@@ -31,23 +27,23 @@ public class VoiceActivationSlider extends DebouncedSlider implements MicTestBut
         mc.getTextureManager().bindTexture(SLIDER);
         GlStateManager.color(1F, 1F, 1F, 1F);
         int width = (int) ((getButtonWidth() - 2) * micValue);
-        drawTexturedModalRect(x + 1, y + 1, 0, 0, width, 18);
+        drawTexturedModalRect(xPosition + 1, yPosition + 1, 0, 0, width, 18);
     }
 
     @Override
     protected void updateMessage() {
         long db = Math.round(Utils.percToDb(value));
-        TextComponentTranslation component = new TextComponentTranslation("message.voicechat.voice_activation", db);
+        ChatComponentTranslation component = new ChatComponentTranslation("message.voicechat.voice_activation", db);
 
         if (db >= -10L) {
-            component.setStyle(new Style().setColor(TextFormatting.RED));
+            component.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
         }
 
         displayString = component.getFormattedText();
     }
 
     @Nullable
-    public ITextComponent getHoverText() {
+    public IChatComponent getHoverText() {
         if (value >= 1D) {
             return NO_ACTIVATION;
         }

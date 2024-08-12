@@ -5,8 +5,10 @@ import de.maxhenkel.voicechat.gui.GameProfileUtils;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.UUID;
 
 public class PlayerVolumeEntry extends VolumeEntry {
@@ -25,7 +27,7 @@ public class PlayerVolumeEntry extends VolumeEntry {
     }
 
     @Override
-    public void renderElement(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks, int skinX, int skinY, int textX, int textY) {
+    public void renderElement(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, int skinX, int skinY, int textX, int textY) {
         GlStateManager.color(1F, 1F, 1F, 1F);
         if (state != null) {
             minecraft.getTextureManager().bindTexture(GameProfileUtils.getSkin(state.getUuid()));
@@ -33,14 +35,14 @@ public class PlayerVolumeEntry extends VolumeEntry {
             GlStateManager.enableBlend();
             Gui.drawScaledCustomSizeModalRect(skinX, skinY, 40F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
             GlStateManager.disableBlend();
-            minecraft.fontRenderer.drawString(state.getName(), textX, textY, PLAYER_NAME_COLOR);
+            minecraft.fontRendererObj.drawString(state.getName(), textX, textY, PLAYER_NAME_COLOR);
         } else {
             minecraft.getTextureManager().bindTexture(OTHER_VOLUME_ICON);
             Gui.drawScaledCustomSizeModalRect(skinX, skinY, 16, 16, 16, 16, SKIN_SIZE, SKIN_SIZE, 16, 16);
-            minecraft.fontRenderer.drawString(OTHER_VOLUME.getUnformattedComponentText(), textX, textY, PLAYER_NAME_COLOR);
+            minecraft.fontRendererObj.drawString(OTHER_VOLUME.getUnformattedText(), textX, textY, PLAYER_NAME_COLOR);
             if (isSelected) {
                 screen.postRender(() -> {
-                    screen.drawHoveringText(OTHER_VOLUME_DESCRIPTION.getUnformattedComponentText(), mouseX, mouseY);
+                    GuiUtils.drawHoveringText(Collections.singletonList(OTHER_VOLUME_DESCRIPTION.getUnformattedText()), mouseX, mouseY, screen.width, screen.height, -1, screen.mc.fontRendererObj);
                 });
             }
         }

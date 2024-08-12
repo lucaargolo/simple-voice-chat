@@ -13,8 +13,9 @@ import de.maxhenkel.voicechat.voice.common.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.Vector3d;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class AudioChannel extends Thread {
                     continue;
                 }
 
-                if (minecraft.world == null || minecraft.player == null) {
+                if (minecraft.theWorld == null || minecraft.thePlayer == null) {
                     continue;
                 }
 
@@ -197,18 +198,18 @@ public class AudioChannel extends Thread {
             appendRecording(() -> PositionalAudioUtils.convertToStereo(processedMonoData));
         } else if (packet instanceof PlayerSoundPacket) {
             PlayerSoundPacket soundPacket = (PlayerSoundPacket) packet;
-            @Nullable Entity entity = minecraft.world.getPlayerEntityByUUID(uuid);
+            @Nullable Entity entity = minecraft.theWorld.getPlayerEntityByUUID(uuid);
             if (entity == null) {
-                Vec3d position = PositionalAudioUtils.getCameraPosition();
+                Vec3 position = PositionalAudioUtils.getCameraPosition();
                 AxisAlignedBB box = new AxisAlignedBB(
-                        position.x - soundPacket.getDistance() - 1F,
-                        position.y - soundPacket.getDistance() - 1F,
-                        position.z - soundPacket.getDistance() - 1F,
-                        position.x + soundPacket.getDistance() + 1F,
-                        position.y + soundPacket.getDistance() + 1F,
-                        position.z + soundPacket.getDistance() + 1F
+                        position.xCoord - soundPacket.getDistance() - 1F,
+                        position.yCoord - soundPacket.getDistance() - 1F,
+                        position.zCoord - soundPacket.getDistance() - 1F,
+                        position.xCoord + soundPacket.getDistance() + 1F,
+                        position.yCoord + soundPacket.getDistance() + 1F,
+                        position.zCoord + soundPacket.getDistance() + 1F
                 );
-                entity = minecraft.world.getEntitiesInAABBexcluding(null, box, e -> e.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
+                entity = minecraft.theWorld.getEntitiesInAABBexcluding(null, box, e -> e.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
                 if (entity == null) {
                     return;
                 }
@@ -226,7 +227,7 @@ public class AudioChannel extends Thread {
                 deathVolume = Math.min(Math.max((20F - (float) ((EntityLiving) entity).deathTime) / 20F, 0F), 1F);
             }
             volume *= deathVolume;
-            Vec3d pos = entity.getPositionEyes(1F);
+            Vec3 pos = entity.getPositionEyes(1F);
 
             short[] processedMonoData = PluginManager.instance().onReceiveEntityClientSound(uuid, monoData, soundPacket.isWhispering(), soundPacket.getDistance());
 

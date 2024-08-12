@@ -12,17 +12,19 @@ import de.maxhenkel.voicechat.voice.common.PlayerState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class JoinGroupEntry extends ListScreenEntryBase {
 
     protected static final ResourceLocation LOCK = new ResourceLocation(Voicechat.MODID, "textures/icons/lock.png");
-    protected static final ITextComponent GROUP_MEMBERS = new TextComponentTranslation("message.voicechat.group_members").setStyle(new Style().setColor(TextFormatting.GRAY));
-    protected static final ITextComponent NO_GROUP_MEMBERS = new TextComponentTranslation("message.voicechat.no_group_members").setStyle(new Style().setColor(TextFormatting.GRAY));
+    protected static final IChatComponent GROUP_MEMBERS = new ChatComponentTranslation("message.voicechat.group_members").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY));
+    protected static final IChatComponent NO_GROUP_MEMBERS = new ChatComponentTranslation("message.voicechat.no_group_members").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY));
 
     protected static final int SKIN_SIZE = 12;
     protected static final int PADDING = 4;
@@ -40,9 +42,10 @@ public class JoinGroupEntry extends ListScreenEntryBase {
         this.group = group;
     }
 
+
     @Override
-    public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
-        super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, isSelected, partialTicks);
+    public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+        super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, isSelected);
         if (isSelected) {
             GuiScreen.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL_SELECTED);
         } else {
@@ -61,9 +64,9 @@ public class JoinGroupEntry extends ListScreenEntryBase {
             GlStateManager.popMatrix();
         }
 
-        minecraft.fontRenderer.drawString(group.group.getName(), x + PADDING + (hasPassword ? 16 + PADDING : 0), y + slotHeight / 2 - minecraft.fontRenderer.FONT_HEIGHT / 2, PLAYER_NAME_COLOR);
+        minecraft.fontRendererObj.drawString(group.group.getName(), x + PADDING + (hasPassword ? 16 + PADDING : 0), y + slotHeight / 2 - minecraft.fontRendererObj.FONT_HEIGHT / 2, PLAYER_NAME_COLOR);
 
-        int textWidth = minecraft.fontRenderer.getStringWidth(group.group.getName()) + (hasPassword ? 16 + PADDING : 0);
+        int textWidth = minecraft.fontRendererObj.getStringWidth(group.group.getName()) + (hasPassword ? 16 + PADDING : 0);
 
         int headsPerRow = (listWidth - (PADDING + textWidth + PADDING + PADDING)) / (SKIN_SIZE + 1);
         int rows = 2;
@@ -100,9 +103,9 @@ public class JoinGroupEntry extends ListScreenEntryBase {
         List<String> tooltip = Lists.newArrayList();
 
         if (group.getGroup().getType().equals(de.maxhenkel.voicechat.api.Group.Type.NORMAL)) {
-            tooltip.add(new TextComponentTranslation("message.voicechat.group_title", new TextComponentString(group.getGroup().getName())).getFormattedText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.group_title", new ChatComponentText(group.getGroup().getName())).getFormattedText());
         } else {
-            tooltip.add(new TextComponentTranslation("message.voicechat.group_type_title", new TextComponentString(group.getGroup().getName()), GroupType.fromType(group.getGroup().getType()).getTranslation()).getFormattedText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.group_type_title", new ChatComponentText(group.getGroup().getName()), GroupType.fromType(group.getGroup().getType()).getTranslation()).getFormattedText());
         }
         if (group.getMembers().isEmpty()) {
             tooltip.add(NO_GROUP_MEMBERS.getFormattedText());
@@ -111,16 +114,16 @@ public class JoinGroupEntry extends ListScreenEntryBase {
             int maxMembers = 10;
             for (int i = 0; i < group.getMembers().size(); i++) {
                 if (i >= maxMembers) {
-                    tooltip.add(new TextComponentTranslation("message.voicechat.more_members", group.getMembers().size() - maxMembers).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
+                    tooltip.add(new ChatComponentTranslation("message.voicechat.more_members", group.getMembers().size() - maxMembers).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)).getFormattedText());
                     break;
                 }
                 PlayerState state = group.getMembers().get(i);
-                tooltip.add(new TextComponentString("  " + state.getName()).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
+                tooltip.add(new ChatComponentText("  " + state.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)).getFormattedText());
             }
         }
 
         parent.postRender(() -> {
-            parent.drawHoveringText(tooltip, mouseX, mouseY);
+            GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, parent.width, parent.height, -1, Minecraft.getMinecraft().fontRendererObj);
         });
     }
 

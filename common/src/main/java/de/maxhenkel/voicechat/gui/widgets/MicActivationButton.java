@@ -2,8 +2,8 @@ package de.maxhenkel.voicechat.gui.widgets;
 
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.voice.client.MicrophoneActivationType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import java.util.function.Consumer;
 
@@ -19,8 +19,8 @@ public class MicActivationButton extends EnumButton<MicrophoneActivationType> {
     }
 
     @Override
-    protected ITextComponent getText(MicrophoneActivationType type) {
-        return new TextComponentTranslation("message.voicechat.activation_type", type.getText());
+    protected IChatComponent getText(MicrophoneActivationType type) {
+        return new ChatComponentTranslation("message.voicechat.activation_type", type.getText());
     }
 
     @Override

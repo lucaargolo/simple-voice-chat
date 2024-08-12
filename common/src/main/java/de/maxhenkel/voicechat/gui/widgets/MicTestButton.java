@@ -11,20 +11,19 @@ import de.maxhenkel.voicechat.voice.common.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.*;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MicTestButton extends ToggleImageButton implements ImageButton.TooltipSupplier {
 
     private static final ResourceLocation MICROPHONE = new ResourceLocation(Voicechat.MODID, "textures/icons/microphone_button.png");
-    private static final ITextComponent TEST_DISABLED = new TextComponentTranslation("message.voicechat.mic_test.disabled");
-    private static final ITextComponent TEST_ENABLED = new TextComponentTranslation("message.voicechat.mic_test.enabled");
-    private static final ITextComponent TEST_UNAVAILABLE = new TextComponentTranslation("message.voicechat.mic_test_unavailable").setStyle(new Style().setColor(TextFormatting.RED));
+    private static final IChatComponent TEST_DISABLED = new ChatComponentTranslation("message.voicechat.mic_test.disabled");
+    private static final IChatComponent TEST_ENABLED = new ChatComponentTranslation("message.voicechat.mic_test.enabled");
+    private static final IChatComponent TEST_UNAVAILABLE = new ChatComponentTranslation("message.voicechat.mic_test_unavailable").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
 
     private boolean micActive;
     @Nullable
@@ -44,8 +43,8 @@ public class MicTestButton extends ToggleImageButton implements ImageButton.Tool
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        super.drawButton(mc, mouseX, mouseY, partialTicks);
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        super.drawButton(mc, mouseX, mouseY);
         if (visible && voiceThread != null) {
             voiceThread.updateLastRender();
         }
@@ -96,13 +95,13 @@ public class MicTestButton extends ToggleImageButton implements ImageButton.Tool
             return;
         }
         if (!enabled) {
-            screen.drawHoveringText(TEST_UNAVAILABLE.getFormattedText(), mouseX, mouseY);
+            GuiUtils.drawHoveringText(Collections.singletonList(TEST_UNAVAILABLE.getFormattedText()), mouseX, mouseY, screen.width, screen.height, -1, mc.fontRendererObj);
             return;
         }
         if (micActive) {
-            screen.drawHoveringText(TEST_ENABLED.getFormattedText(), mouseX, mouseY);
+            GuiUtils.drawHoveringText(Collections.singletonList(TEST_ENABLED.getFormattedText()), mouseX, mouseY, screen.width, screen.height, -1, mc.fontRendererObj);
         } else {
-            screen.drawHoveringText(TEST_DISABLED.getFormattedText(), mouseX, mouseY);
+            GuiUtils.drawHoveringText(Collections.singletonList(TEST_DISABLED.getFormattedText()), mouseX, mouseY, screen.width, screen.height, -1, mc.fontRendererObj);
         }
         GlStateManager.disableLighting();
     }

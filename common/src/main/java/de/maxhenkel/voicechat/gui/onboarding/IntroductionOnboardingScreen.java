@@ -3,20 +3,24 @@ package de.maxhenkel.voicechat.gui.onboarding;
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
 
 import javax.annotation.Nullable;
 
 public class IntroductionOnboardingScreen extends OnboardingScreenBase {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.introduction.title", CommonCompatibilityManager.INSTANCE.getModName()).setStyle(new Style().setBold(true));
-    private static final ITextComponent DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.introduction.description");
-    private static final ITextComponent SKIP = new TextComponentTranslation("message.voicechat.onboarding.introduction.skip");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.introduction.title", CommonCompatibilityManager.INSTANCE.getModName()).setChatStyle(new ChatStyle().setBold(true));
+    private static final IChatComponent DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.introduction.description");
+    private static final IChatComponent SKIP = new ChatComponentTranslation("message.voicechat.onboarding.introduction.skip");
 
     public IntroductionOnboardingScreen(@Nullable GuiScreen previous) {
         super(TITLE, previous);
+    }
+
+    public IntroductionOnboardingScreen() {
+        this(null);
     }
 
     @Override
@@ -29,6 +33,7 @@ public class IntroductionOnboardingScreen extends OnboardingScreenBase {
                 mc.displayGuiScreen(new SkipOnboardingScreen(IntroductionOnboardingScreen.this));
             }
         };
+
         addButton(skipButton);
 
         addBackOrCancelButton(1);

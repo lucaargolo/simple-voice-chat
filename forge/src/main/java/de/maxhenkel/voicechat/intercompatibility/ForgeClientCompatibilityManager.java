@@ -50,7 +50,7 @@ public class ForgeClientCompatibilityManager extends ClientCompatibilityManager 
     public void onRenderName(Entity entity, String str, double x, double y, double z, int maxDistance) {
         renderNameplateEvents.forEach(renderNameplateEvent -> renderNameplateEvent.render(entity, str, x, y, z, maxDistance));
         //TODO Check if player can be seen
-        if (minecraft.player == null /*|| entity.isInvisibleTo(minecraft.player)*/) {
+        if (minecraft.thePlayer == null /*|| entity.isInvisibleTo(minecraft.player)*/) {
             return;
         }
         renderNameplateEvents.forEach(renderNameplateEvent -> renderNameplateEvent.render(entity, str, x, y, z, maxDistance));
@@ -58,10 +58,10 @@ public class ForgeClientCompatibilityManager extends ClientCompatibilityManager 
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
-        if (!RenderGameOverlayEvent.ElementType.HOTBAR.equals(event.getType())) {
+        if (!RenderGameOverlayEvent.ElementType.HOTBAR.equals(event.type)) {
             return;
         }
-        renderHUDEvents.forEach(renderHUDEvent -> renderHUDEvent.render(event.getPartialTicks()));
+        renderHUDEvents.forEach(renderHUDEvent -> renderHUDEvent.render(event.partialTicks));
     }
 
     public void onTickKey() {

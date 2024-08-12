@@ -16,16 +16,16 @@ public class ToggleImageButton extends ImageButton {
     }
 
     @Override
-    protected void renderImage(int mouseX, int mouseY, float delta) {
+    protected void renderImage(int mouseX, int mouseY) {
         if (stateSupplier == null) {
             return;
         }
         mc.getTextureManager().bindTexture(texture);
 
         if (stateSupplier.get()) {
-            drawModalRectWithCustomSizedTexture(x + 2, y + 2, 16, 0, 16, 16, 32, 32);
+            drawModalRectWithCustomSizedTexture(xPosition + 2, yPosition + 2, 16, 0, 16, 16, 32, 32);
         } else {
-            drawModalRectWithCustomSizedTexture(x + 2, y + 2, 0, 0, 16, 16, 32, 32);
+            drawModalRectWithCustomSizedTexture(xPosition + 2, yPosition + 2, 0, 0, 16, 16, 32, 32);
         }
     }
 

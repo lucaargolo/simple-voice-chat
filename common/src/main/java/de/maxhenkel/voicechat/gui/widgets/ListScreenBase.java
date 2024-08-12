@@ -3,7 +3,7 @@ package de.maxhenkel.voicechat.gui.widgets;
 import de.maxhenkel.voicechat.gui.ScreenBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IChatComponent;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public abstract class ListScreenBase extends ScreenBase {
     private Runnable postRender;
     private ListScreenListBase<?> list;
 
-    public ListScreenBase(ITextComponent title) {
+    public ListScreenBase(IChatComponent title) {
         super(title);
     }
 

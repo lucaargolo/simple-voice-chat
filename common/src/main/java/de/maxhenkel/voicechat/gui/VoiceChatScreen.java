@@ -14,11 +14,12 @@ import de.maxhenkel.voicechat.gui.widgets.ImageButton;
 import de.maxhenkel.voicechat.gui.widgets.ToggleImageButton;
 import de.maxhenkel.voicechat.voice.client.*;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
+import net.minecraft.util.*;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class VoiceChatScreen extends VoiceChatScreenBase {
 
@@ -28,10 +29,10 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
     private static final ResourceLocation VOLUMES = new ResourceLocation(Voicechat.MODID, "textures/icons/adjust_volumes.png");
     private static final ResourceLocation SPEAKER = new ResourceLocation(Voicechat.MODID, "textures/icons/speaker_button.png");
     private static final ResourceLocation RECORD = new ResourceLocation(Voicechat.MODID, "textures/icons/record_button.png");
-    private static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.voice_chat.title");
-    private static final ITextComponent SETTINGS = new TextComponentTranslation("message.voicechat.settings");
-    private static final ITextComponent GROUP = new TextComponentTranslation("message.voicechat.group");
-    private static final ITextComponent ADJUST_PLAYER_VOLUMES = new TextComponentTranslation("message.voicechat.adjust_volumes");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.voice_chat.title");
+    private static final IChatComponent SETTINGS = new ChatComponentTranslation("message.voicechat.settings");
+    private static final IChatComponent GROUP = new ChatComponentTranslation("message.voicechat.group");
+    private static final IChatComponent ADJUST_PLAYER_VOLUMES = new ChatComponentTranslation("message.voicechat.adjust_volumes");
 
     private ToggleImageButton mute;
     private ToggleImageButton disable;
@@ -62,7 +63,7 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
         ImageButton volumes = new ImageButton(2, guiLeft + 6 + 20 + 2 + 20 + 2, guiTop + ySize - 6 - 20, VOLUMES, button -> {
             mc.displayGuiScreen(new AdjustVolumesScreen());
         }, (button, mouseX, mouseY) -> {
-            drawHoveringText(ADJUST_PLAYER_VOLUMES.getUnformattedComponentText(), mouseX, mouseY);
+            drawHoveringText(Collections.singletonList(ADJUST_PLAYER_VOLUMES.getUnformattedText()), mouseX, mouseY);
         });
         addButton(volumes);
 
@@ -144,17 +145,17 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        int titleWidth = fontRenderer.getStringWidth(TITLE.getUnformattedComponentText());
-        fontRenderer.drawString(TITLE.getUnformattedComponentText(), guiLeft + (xSize - titleWidth) / 2, guiTop + 7, FONT_COLOR);
+        int titleWidth = fontRendererObj.getStringWidth(TITLE.getUnformattedText());
+        fontRendererObj.drawString(TITLE.getUnformattedText(), guiLeft + (xSize - titleWidth) / 2, guiTop + 7, FONT_COLOR);
 
         ClientVoicechat client = ClientManager.getClient();
         if (client != null && client.getRecorder() != null) {
             AudioRecorder recorder = client.getRecorder();
-            TextComponentString time = new TextComponentString(recorder.getDuration());
-            fontRenderer.drawString(time.setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText(), guiLeft + recordingHoverArea.getPosX() + recordingHoverArea.getWidth() / 2 - fontRenderer.getStringWidth(time.getUnformattedComponentText()) / 2, guiTop + recordingHoverArea.getPosY() + recordingHoverArea.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, 0);
+            ChatComponentText time = new ChatComponentText(recorder.getDuration());
+            fontRendererObj.drawString(time.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_RED)).getFormattedText(), guiLeft + recordingHoverArea.getPosX() + recordingHoverArea.getWidth() / 2 - fontRendererObj.getStringWidth(time.getUnformattedText()) / 2, guiTop + recordingHoverArea.getPosY() + recordingHoverArea.getHeight() / 2 - fontRendererObj.FONT_HEIGHT / 2, 0);
 
             if (recordingHoverArea.isHovered(guiLeft, guiTop, mouseX, mouseY)) {
-                drawHoveringText(new TextComponentTranslation("message.voicechat.storage_size", recorder.getStorage()).getUnformattedComponentText(), mouseX, mouseY);
+                drawHoveringText(Collections.singletonList(new ChatComponentTranslation("message.voicechat.storage_size", recorder.getStorage()).getUnformattedText()), mouseX, mouseY);
             }
         }
     }

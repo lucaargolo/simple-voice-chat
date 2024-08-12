@@ -10,8 +10,7 @@ import de.maxhenkel.voicechat.plugins.impl.opus.OpusManager;
 import de.maxhenkel.voicechat.profile.UsernameCache;
 import de.maxhenkel.voicechat.resourcepacks.VoiceChatResourcePack;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,9 +23,9 @@ public abstract class VoicechatClient {
     public static VolumeConfig VOLUME_CONFIG;
     public static UsernameCache USERNAME_CACHE;
 
-    public static VoiceChatResourcePack CLASSIC_ICONS = new VoiceChatResourcePack("classic_icons", new TextComponentTranslation("resourcepack.voicechat.classic_icons"));
-    public static VoiceChatResourcePack WHITE_ICONS = new VoiceChatResourcePack("white_icons", new TextComponentTranslation("resourcepack.voicechat.white_icons"));
-    public static VoiceChatResourcePack BLACK_ICONS = new VoiceChatResourcePack("black_icons", new TextComponentTranslation("resourcepack.voicechat.black_icons"));
+    public static VoiceChatResourcePack CLASSIC_ICONS = new VoiceChatResourcePack("classic_icons", new ChatComponentTranslation("resourcepack.voicechat.classic_icons"));
+    public static VoiceChatResourcePack WHITE_ICONS = new VoiceChatResourcePack("white_icons", new ChatComponentTranslation("resourcepack.voicechat.white_icons"));
+    public static VoiceChatResourcePack BLACK_ICONS = new VoiceChatResourcePack("black_icons", new ChatComponentTranslation("resourcepack.voicechat.black_icons"));
 
     public void initializeConfigs() {
         fixVolumeConfig();

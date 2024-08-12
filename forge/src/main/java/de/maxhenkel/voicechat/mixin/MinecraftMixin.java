@@ -12,14 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
-    @Inject(method = "runTickMouse", at = @At("RETURN"))
-    public void runTickMouse(CallbackInfo info) {
-        ((ForgeClientCompatibilityManager) ClientCompatibilityManager.INSTANCE).onTickMouse();
-    }
 
-    @Inject(method = "runTickKeyboard", at = @At("RETURN"))
+    @Inject(method = "dispatchKeypresses", at = @At("RETURN"))
     public void runTickKeyboard(CallbackInfo info) {
         ((ForgeClientCompatibilityManager) ClientCompatibilityManager.INSTANCE).onTickKey();
+        ((ForgeClientCompatibilityManager) ClientCompatibilityManager.INSTANCE).onTickMouse();
+
     }
 
     @Inject(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))

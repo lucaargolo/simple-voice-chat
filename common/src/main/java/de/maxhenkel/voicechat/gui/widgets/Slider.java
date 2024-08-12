@@ -3,7 +3,7 @@ package de.maxhenkel.voicechat.gui.widgets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 
 public abstract class Slider extends GuiButton {
 
@@ -29,10 +29,10 @@ public abstract class Slider extends GuiButton {
             updateSliderValue(mouseX, mouseY);
         }
 
-        mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
+        mc.getTextureManager().bindTexture(buttonTextures);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        drawTexturedModalRect(x + (int) (value * (float) (width - 8)), y, 0, 66, 4, 20);
-        drawTexturedModalRect(x + (int) (value * (float) (width - 8)) + 4, y, 196, 66, 4, 20);
+        drawTexturedModalRect(xPosition + (int) (value * (float) (width - 8)), yPosition, 0, 66, 4, 20);
+        drawTexturedModalRect(xPosition + (int) (value * (float) (width - 8)) + 4, yPosition, 196, 66, 4, 20);
     }
 
     @Override
@@ -47,8 +47,8 @@ public abstract class Slider extends GuiButton {
     }
 
     private void updateSliderValue(int mouseX, int mouseY) {
-        value = (double) (mouseX - (x + 4)) / (double) (width - 8);
-        value = MathHelper.clamp(value, 0D, 1D);
+        value = (double) (mouseX - (xPosition + 4)) / (double) (width - 8);
+        value = MathHelper.clamp_double(value, 0D, 1D);
         updateMessage();
     }
 

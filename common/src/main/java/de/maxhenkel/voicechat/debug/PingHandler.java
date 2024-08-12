@@ -22,13 +22,13 @@ public class PingHandler {
         try {
             byte[] payload = buf.readByteArray();
             PacketBuffer buffer = new PacketBuffer(Unpooled.wrappedBuffer(payload));
-            UUID id = buffer.readUniqueId();
+            UUID id = buffer.readUuid();
             long timestamp = buffer.readLong();
             Voicechat.LOGGER.debug("Received ping {} from {}", id, socketAddress);
 
             PacketBuffer responseBuffer = new PacketBuffer(Unpooled.buffer(128 + 64));
 
-            responseBuffer.writeUniqueId(id);
+            responseBuffer.writeUuid(id);
             responseBuffer.writeLong(timestamp);
 
             byte[] response = new byte[responseBuffer.readableBytes()];

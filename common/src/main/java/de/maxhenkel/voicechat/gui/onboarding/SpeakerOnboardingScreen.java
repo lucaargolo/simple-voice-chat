@@ -6,17 +6,17 @@ import de.maxhenkel.voicechat.gui.audiodevice.SelectSpeakerScreen;
 import de.maxhenkel.voicechat.voice.client.AudioChannelConfig;
 import de.maxhenkel.voicechat.voice.client.DataLines;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class SpeakerOnboardingScreen extends DeviceOnboardingScreen {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.speaker").setStyle(new Style().setBold(true));
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.speaker").setChatStyle(new ChatStyle().setBold(true));
 
     public SpeakerOnboardingScreen(@Nullable GuiScreen previous) {
         super(TITLE, previous);

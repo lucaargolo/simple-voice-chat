@@ -6,12 +6,7 @@ import de.maxhenkel.voicechat.gui.widgets.IngameListScreenBase;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -20,9 +15,9 @@ import java.util.Locale;
 public class AdjustVolumesScreen extends IngameListScreenBase {
 
     protected static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID, "textures/gui/gui_volumes.png");
-    protected static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.adjust_volume.title");
-    protected static final ITextComponent SEARCH_HINT = new TextComponentTranslation("message.voicechat.search_hint").setStyle(new Style().setColor(TextFormatting.GRAY).setItalic(true));
-    protected static final ITextComponent EMPTY_SEARCH = new TextComponentTranslation("message.voicechat.search_empty").setStyle(new Style().setColor(TextFormatting.GRAY));
+    protected static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.adjust_volume.title");
+    protected static final IChatComponent SEARCH_HINT = new ChatComponentTranslation("message.voicechat.search_hint").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY).setItalic(true));
+    protected static final IChatComponent EMPTY_SEARCH = new ChatComponentTranslation("message.voicechat.search_empty").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY));
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 8;
@@ -51,7 +46,7 @@ public class AdjustVolumesScreen extends IngameListScreenBase {
         super.initGui();
         guiLeft = guiLeft + 2;
         guiTop = 32;
-        int minUnits = MathHelper.ceil((float) (CELL_HEIGHT + SEARCH_HEIGHT + 4) / (float) UNIT_SIZE);
+        int minUnits = MathHelper.ceiling_float_int((float) (CELL_HEIGHT + SEARCH_HEIGHT + 4) / (float) UNIT_SIZE);
         units = Math.max(minUnits, (height - HEADER_SIZE - FOOTER_SIZE - guiTop * 2 - SEARCH_HEIGHT) / UNIT_SIZE);
         ySize = HEADER_SIZE + units * UNIT_SIZE + FOOTER_SIZE;
 
@@ -60,24 +55,26 @@ public class AdjustVolumesScreen extends IngameListScreenBase {
         volumeList = new AdjustVolumeList(width, units * UNIT_SIZE - SEARCH_HEIGHT, guiTop + HEADER_SIZE + SEARCH_HEIGHT, CELL_HEIGHT, this);
 
         String string = searchBox != null ? searchBox.getText() : "";
-        searchBox = new GuiTextField(0, fontRenderer, guiLeft + 28, guiTop + HEADER_SIZE + 6, 196, SEARCH_HEIGHT);
+        searchBox = new GuiTextField(0, fontRendererObj, guiLeft + 28, guiTop + HEADER_SIZE + 6, 196, SEARCH_HEIGHT);
         searchBox.setMaxStringLength(16);
         searchBox.setEnableBackgroundDrawing(false);
         searchBox.setVisible(true);
         searchBox.setTextColor(0xFFFFFF);
         searchBox.setText(string);
-        searchBox.setGuiResponder(new GuiPageButtonList.GuiResponder() {
+        searchBox.func_175207_a(new GuiPageButtonList.GuiResponder() {
             @Override
-            public void setEntryValue(int id, boolean value) {
+            public void func_175321_a(int p_175321_1_, boolean p_175321_2_) {
+
             }
 
             @Override
-            public void setEntryValue(int id, float value) {
+            public void onTick(int id, float value) {
+
             }
 
             @Override
-            public void setEntryValue(int id, String value) {
-                checkSearchStringUpdate(value);
+            public void func_175319_a(int p_175319_1_, String p_175319_2_) {
+                checkSearchStringUpdate(p_175319_2_);
             }
         });
         setList(volumeList);
@@ -102,7 +99,7 @@ public class AdjustVolumesScreen extends IngameListScreenBase {
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        fontRenderer.drawString(TITLE.getFormattedText(), width / 2 - fontRenderer.getStringWidth(TITLE.getUnformattedComponentText()) / 2, guiTop + 5, VoiceChatScreenBase.FONT_COLOR);
+        fontRendererObj.drawString(TITLE.getFormattedText(), width / 2 - fontRendererObj.getStringWidth(TITLE.getUnformattedText()) / 2, guiTop + 5, VoiceChatScreenBase.FONT_COLOR);
 
         if (volumeList == null) {
             return;
@@ -111,10 +108,10 @@ public class AdjustVolumesScreen extends IngameListScreenBase {
         if (!volumeList.isEmpty()) {
             volumeList.drawScreen(mouseX, mouseY, delta);
         } else if (!searchBox.getText().isEmpty()) {
-            drawCenteredString(fontRenderer, EMPTY_SEARCH.getFormattedText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRenderer.FONT_HEIGHT / 2, -1);
+            drawCenteredString(fontRendererObj, EMPTY_SEARCH.getFormattedText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRendererObj.FONT_HEIGHT / 2, -1);
         }
         if (!searchBox.isFocused() && searchBox.getText().isEmpty()) {
-            drawString(fontRenderer, SEARCH_HINT.getFormattedText(), searchBox.x, searchBox.y, -1);
+            drawString(fontRendererObj, SEARCH_HINT.getFormattedText(), searchBox.xPosition, searchBox.yPosition, -1);
         } else {
             GlStateManager.disableLighting();
             GlStateManager.disableBlend();

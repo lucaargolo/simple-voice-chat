@@ -28,7 +28,7 @@ public class RemoveCategoryPacket implements Packet<RemoveCategoryPacket> {
 
     @Override
     public RemoveCategoryPacket fromBytes(PacketBuffer buf) {
-        categoryId = buf.readString(16);
+        categoryId = buf.readStringFromBuffer(16);
         return this;
     }
 

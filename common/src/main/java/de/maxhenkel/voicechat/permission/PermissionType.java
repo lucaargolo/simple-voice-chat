@@ -16,7 +16,7 @@ public enum PermissionType {
             case NOONE:
                 return false;
             case OPS:
-                return player != null && player.mcServer.getPlayerList().canSendCommands(player.getGameProfile());
+                return player != null && player.mcServer.getConfigurationManager().canSendCommands(player.getGameProfile());
         }
     }
 

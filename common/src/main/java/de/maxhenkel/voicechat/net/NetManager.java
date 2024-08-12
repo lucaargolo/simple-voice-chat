@@ -7,8 +7,8 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
 
 public abstract class NetManager {
@@ -48,11 +48,11 @@ public abstract class NetManager {
     public abstract <T extends Packet<T>> Channel<T> registerReceiver(Class<T> packetType, boolean toClient, boolean toServer);
 
     public static void sendToServer(Packet<?> packet) {
-        NetHandlerPlayClient connection = Minecraft.getMinecraft().getConnection();
+        NetHandlerPlayClient connection = Minecraft.getMinecraft().getNetHandler();
         if (connection != null && connection.getNetworkManager().isChannelOpen()) {
             PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
             packet.toBytes(buffer);
-            connection.sendPacket(new CPacketCustomPayload(packet.getIdentifier().toString(), buffer));
+            connection.addToSendQueue(new C17PacketCustomPayload(packet.getIdentifier().toString(), buffer));
         }
     }
 
@@ -62,7 +62,7 @@ public abstract class NetManager {
         }
         PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         packet.toBytes(buffer);
-        player.connection.sendPacket(new SPacketCustomPayload(packet.getIdentifier().toString(), buffer));
+        player.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(packet.getIdentifier().toString(), buffer));
     }
 
     public interface ServerReceiver<T extends Packet<T>> {

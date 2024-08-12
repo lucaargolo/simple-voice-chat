@@ -5,7 +5,7 @@ import de.maxhenkel.voicechat.gui.audiodevice.AudioDeviceList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IChatComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,7 +16,7 @@ public abstract class DeviceOnboardingScreen extends OnboardingScreenBase {
 
     protected List<String> micNames;
 
-    public DeviceOnboardingScreen(ITextComponent title, @Nullable GuiScreen previous) {
+    public DeviceOnboardingScreen(IChatComponent title, @Nullable GuiScreen previous) {
         super(title, previous);
         mc = Minecraft.getMinecraft();
         micNames = getNames();
@@ -35,7 +35,7 @@ public abstract class DeviceOnboardingScreen extends OnboardingScreenBase {
     public void initGui() {
         super.initGui();
 
-        deviceList = new AudioDeviceList(width, contentHeight - fontRenderer.FONT_HEIGHT - BUTTON_HEIGHT - PADDING * 2, guiTop + fontRenderer.FONT_HEIGHT + PADDING).setIcon(getIcon()).setConfigEntry(getConfigEntry());
+        deviceList = new AudioDeviceList(width, contentHeight - fontRendererObj.FONT_HEIGHT - BUTTON_HEIGHT - PADDING * 2, guiTop + fontRendererObj.FONT_HEIGHT + PADDING).setIcon(getIcon()).setConfigEntry(getConfigEntry());
 
         deviceList.setAudioDevices(getNames());
         setList(deviceList);

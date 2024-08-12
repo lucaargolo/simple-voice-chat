@@ -3,15 +3,15 @@ package de.maxhenkel.voicechat.gui;
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IChatComponent;
 
 import java.io.IOException;
 
 public abstract class ScreenBase extends GuiScreen {
 
-    protected ITextComponent title;
+    protected IChatComponent title;
 
-    protected ScreenBase(ITextComponent title) {
+    protected ScreenBase(IChatComponent title) {
         this.title = title;
     }
 
@@ -56,11 +56,15 @@ public abstract class ScreenBase extends GuiScreen {
     }
 
     protected boolean isIngame() {
-        return mc.world != null;
+        return mc.theWorld != null;
     }
 
     public static int color(int alpha, int red, int green, int blue) {
         return alpha << 24 | red << 16 | green << 8 | blue;
+    }
+
+    public void addButton(GuiButton button) {
+        buttonList.add(button);
     }
 
 }

@@ -10,9 +10,9 @@ import de.maxhenkel.voicechat.plugins.impl.mp3.Mp3EncoderImpl;
 import de.maxhenkel.voicechat.voice.common.NamedThreadPoolFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.*;
 import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
@@ -240,7 +240,7 @@ public class AudioRecorder {
 
     private void save() {
         threadPool.execute(() -> {
-            send(new TextComponentTranslation("message.voicechat.processing_recording_session"));
+            send(new ChatComponentTranslation("message.voicechat.processing_recording_session"));
             try {
                 Exception error = null;
                 sendProgress(0F);
@@ -266,35 +266,35 @@ public class AudioRecorder {
                     throw error;
                 }
                 sendProgress(1F);
-                send(new TextComponentTranslation("message.voicechat.save_session",
-                        new TextComponentString(location.normalize().toString())
-                                .setStyle(new Style()
-                                        .setColor(TextFormatting.GRAY)
-                                        .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("message.voicechat.open_folder")))
-                                        .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, location.normalize().toString()))
+                send(new ChatComponentTranslation("message.voicechat.save_session",
+                        new ChatComponentText(location.normalize().toString())
+                                .setChatStyle(new ChatStyle()
+                                        .setColor(EnumChatFormatting.GRAY)
+                                        .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("message.voicechat.open_folder")))
+                                        .setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, location.normalize().toString()))
                                 )
                 ));
             } catch (Exception e) {
                 Voicechat.LOGGER.error("Failed to save recording session", e);
-                send(new TextComponentTranslation("message.voicechat.save_session_failed", e.getMessage()));
+                send(new ChatComponentTranslation("message.voicechat.save_session_failed", e.getMessage()));
             }
         });
     }
 
     private void sendProgress(float progress) {
-        send(new TextComponentTranslation("message.voicechat.processing_progress",
-                new TextComponentString(String.valueOf((int) (progress * 100F)))
-                        .setStyle(new Style().setColor(TextFormatting.GRAY)))
+        send(new ChatComponentTranslation("message.voicechat.processing_progress",
+                new ChatComponentText(String.valueOf((int) (progress * 100F)))
+                        .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)))
         );
     }
 
-    private void send(ITextComponent msg) {
+    private void send(IChatComponent msg) {
         Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayerSP player = mc.player;
-        if (player != null && mc.world != null) {
-            player.sendMessage(msg);
+        EntityPlayerSP player = mc.thePlayer;
+        if (player != null && mc.theWorld != null) {
+            player.addChatMessage(msg);
         } else {
-            Voicechat.LOGGER.info("{}", msg.getUnformattedComponentText());
+            Voicechat.LOGGER.info("{}", msg.getUnformattedText());
         }
     }
 

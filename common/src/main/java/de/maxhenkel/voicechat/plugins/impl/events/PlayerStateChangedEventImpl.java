@@ -44,7 +44,7 @@ public class PlayerStateChangedEventImpl extends ServerEventImpl implements Play
             if (server == null) {
                 return null;
             }
-            EntityPlayerMP player = server.getServer().getPlayerList().getPlayerByUUID(state.getUuid());
+            EntityPlayerMP player = server.getServer().getConfigurationManager().getPlayerByUUID(state.getUuid());
             if (player == null) {
                 return null;
             }

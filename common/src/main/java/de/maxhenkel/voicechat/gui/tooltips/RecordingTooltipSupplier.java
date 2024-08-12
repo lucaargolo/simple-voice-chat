@@ -4,7 +4,8 @@ import de.maxhenkel.voicechat.gui.widgets.ImageButton;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +28,12 @@ public class RecordingTooltipSupplier implements ImageButton.TooltipSupplier {
         List<String> tooltip = new ArrayList<>();
 
         if (client.getRecorder() == null) {
-            tooltip.add(new TextComponentTranslation("message.voicechat.recording.disabled").getUnformattedComponentText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.recording.disabled").getUnformattedText());
         } else {
-            tooltip.add(new TextComponentTranslation("message.voicechat.recording.enabled").getUnformattedComponentText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.recording.enabled").getUnformattedText());
         }
 
-        screen.drawHoveringText(tooltip, mouseX, mouseY);
+        GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, screen.width, screen.height, -1, screen.mc.fontRendererObj);
     }
 
 }

@@ -5,16 +5,17 @@ import de.maxhenkel.voicechat.gui.widgets.MicAmplificationSlider;
 import de.maxhenkel.voicechat.gui.widgets.MicTestButton;
 import de.maxhenkel.voicechat.gui.widgets.VoiceActivationSlider;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 
 public class VoiceActivationOnboardingScreen extends OnboardingScreenBase {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.voice.title").setStyle(new Style().setBold(true));
-    private static final ITextComponent DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.voice.description");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.voice.title").setChatStyle(new ChatStyle().setBold(true));
+    private static final IChatComponent DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.voice.description");
 
     protected VoiceActivationSlider slider;
     protected MicTestButton micTestButton;
@@ -54,9 +55,9 @@ public class VoiceActivationOnboardingScreen extends OnboardingScreenBase {
         renderTitle(TITLE);
         renderMultilineText(DESCRIPTION);
 
-        ITextComponent sliderTooltip = slider.getHoverText();
+        IChatComponent sliderTooltip = slider.getHoverText();
         if (slider.isHovered() && sliderTooltip != null) {
-            drawHoveringText(sliderTooltip.getFormattedText(), mouseX, mouseY);
+            drawHoveringText(Collections.singletonList(sliderTooltip.getFormattedText()), mouseX, mouseY);
         } else if (micTestButton.isHovered()) {
             micTestButton.onTooltip(micTestButton, mouseX, mouseY);
         }

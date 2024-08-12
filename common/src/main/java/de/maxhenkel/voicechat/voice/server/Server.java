@@ -12,9 +12,11 @@ import de.maxhenkel.voicechat.plugins.PluginManager;
 import de.maxhenkel.voicechat.voice.common.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.net.InetAddress;
@@ -289,7 +291,7 @@ public class Server extends Thread {
                         connections.put(connection.getPlayerUUID(), connection);
                         unCheckedConnections.remove(connection.getPlayerUUID());
                         Voicechat.LOGGER.info("Successfully validated connection of player {}", connection.getPlayerUUID());
-                        EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(connection.getPlayerUUID());
+                        EntityPlayerMP player = server.getConfigurationManager().getPlayerByUUID(connection.getPlayerUUID());
                         if (player != null) {
                             CommonCompatibilityManager.INSTANCE.emitServerVoiceChatConnectedEvent(player);
                             PluginManager.instance().onPlayerConnected(player);
@@ -325,13 +327,13 @@ public class Server extends Thread {
     }
 
     public void onMicPacket(UUID playerUuid, MicPacket packet) {
-        EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(playerUuid);
+        EntityPlayerMP player = server.getConfigurationManager().getPlayerByUUID(playerUuid);
         if (player == null) {
             return;
         }
         if (!PermissionManager.INSTANCE.SPEAK_PERMISSION.hasPermission(player)) {
             CooldownTimer.run("no-speak-" + playerUuid, 30_000L, () -> {
-                player.sendStatusMessage(new TextComponentTranslation("message.voicechat.no_speak_permission"), true);
+                player.playerNetServerHandler.sendPacket(new S02PacketChat(new ChatComponentTranslation("message.voicechat.no_speak_permission"), (byte) 2));
             });
             return;
         }
@@ -369,7 +371,7 @@ public class Server extends Thread {
             if (senderState.getUuid().equals(state.getUuid())) {
                 continue;
             }
-            EntityPlayerMP p = server.getPlayerList().getPlayerByUUID(state.getUuid());
+            EntityPlayerMP p = server.getConfigurationManager().getPlayerByUUID(state.getUuid());
             if (p == null) {
                 continue;
             }
@@ -416,7 +418,7 @@ public class Server extends Thread {
             source = SoundPacketEvent.SOURCE_PROXIMITY;
         }
 
-        broadcast(ServerWorldUtils.getPlayersInRange(sender.getServerWorld(), sender.getPositionVector(), getBroadcastRange(distance), p -> !p.getUniqueID().equals(sender.getUniqueID())), soundPacket, sender, senderState, groupId, source);
+        broadcast(ServerWorldUtils.getPlayersInRange(sender.getServerForPlayer(), sender.getPositionVector(), getBroadcastRange(distance), p -> !p.getUniqueID().equals(sender.getUniqueID())), soundPacket, sender, senderState, groupId, source);
     }
 
     public void sendSoundPacket(@Nullable EntityPlayerMP sender, @Nullable PlayerState senderState, EntityPlayerMP receiver, PlayerState receiverState, @Nullable ClientConnection connection, SoundPacket<?> soundPacket, String source) {
@@ -436,7 +438,7 @@ public class Server extends Thread {
 
         if (!PermissionManager.INSTANCE.LISTEN_PERMISSION.hasPermission(receiver)) {
             CooldownTimer.run(String.format("no-listen-%s", receiver.getUniqueID()), 30_000L, () -> {
-                receiver.sendStatusMessage(new TextComponentTranslation("message.voicechat.no_listen_permission"), true);
+                receiver.playerNetServerHandler.sendPacket(new S02PacketChat(new ChatComponentTranslation("message.voicechat.no_listen_permission"), (byte) 2));
             });
             return;
         }
@@ -480,7 +482,7 @@ public class Server extends Thread {
                 // Don't call disconnectClient here!
                 secrets.remove(connection.getPlayerUUID());
                 Voicechat.LOGGER.info("Player {} timed out", connection.getPlayerUUID());
-                EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(connection.getPlayerUUID());
+                EntityPlayerMP player = server.getConfigurationManager().getPlayerByUUID(connection.getPlayerUUID());
                 if (player != null) {
                     Voicechat.LOGGER.info("Reconnecting player {}", player.getDisplayNameString());
                     Voicechat.SERVER.initializePlayerConnection(player);

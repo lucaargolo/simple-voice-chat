@@ -1,17 +1,17 @@
 package de.maxhenkel.voicechat.gui.onboarding;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 
 public class SkipOnboardingScreen extends OnboardingScreenBase {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.skip.title").setStyle(new Style().setBold(true));
-    private static final ITextComponent DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.skip.description");
-    private static final ITextComponent CONFIRM = new TextComponentTranslation("message.voicechat.onboarding.confirm");
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.skip.title").setChatStyle(new ChatStyle().setBold(true));
+    private static final IChatComponent DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.skip.description");
+    private static final IChatComponent CONFIRM = new ChatComponentTranslation("message.voicechat.onboarding.confirm");
 
     public SkipOnboardingScreen(@Nullable GuiScreen previous) {
         super(TITLE, previous);

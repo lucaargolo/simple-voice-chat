@@ -39,16 +39,16 @@ public class JoinGroupPacket implements Packet<JoinGroupPacket> {
 
     @Override
     public JoinGroupPacket fromBytes(PacketBuffer buf) {
-        group = buf.readUniqueId();
+        group = buf.readUuid();
         if (buf.readBoolean()) {
-            password = buf.readString(512);
+            password = buf.readStringFromBuffer(512);
         }
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(group);
+        buf.writeUuid(group);
         buf.writeBoolean(password != null);
         if (password != null) {
             buf.writeString(password);

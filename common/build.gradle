@@ -1,22 +1,44 @@
-apply plugin: 'net.minecraftforge.gradle'
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
+    }
+}
 
-apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
+apply plugin: "java"
+apply plugin: "net.minecraftforge.gradle.forge"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = archives_base_name
+version = mod_version
+group = maven_group
+
+minecraft {
+    version = minecraft_version
+    mappings = minecraft_mappings
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven { url 'https://repo.spongepowered.org/maven/' }
+    maven {
+        name = "henkelmax.public"
+        url = 'https://maven.maxhenkel.de/repository/public'
+    }
+}
 
 dependencies {
-    implementation "de.maxhenkel.opus4j:opus4j:${opus4j_version}"
-    implementation "org.concentus:Concentus:${concentus_version}"
-    implementation "de.maxhenkel.rnnoise4j:rnnoise4j:${rnnoise4j_version}"
-    implementation "de.maxhenkel.lame4j:lame4j:${lame4j_version}"
+    implementation project(':api')
+    implementation('de.maxhenkel.configbuilder:configbuilder:2.0.1')
+    implementation('de.maxhenkel.opus4j:opus4j:2.0.2')
+    implementation('org.concentus:Concentus:1.0-SNAPSHOT')
+    implementation('de.maxhenkel.rnnoise4j:rnnoise4j:2.0.2')
+    implementation('de.maxhenkel.lame4j:lame4j:2.0.3')
+    implementation('org.spongepowered:mixin:0.7.10-SNAPSHOT')
 }
 
-sourceSets {
-    template {
-        java {
-            srcDir 'src/template/java'
-        }
-    }
-    main {
-        compileClasspath += sourceSets.template.output
-        runtimeClasspath += sourceSets.template.output
-    }
-}
+compileJava.options.encoding = "UTF-8"

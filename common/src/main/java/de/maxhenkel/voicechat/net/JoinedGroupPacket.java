@@ -40,7 +40,7 @@ public class JoinedGroupPacket implements Packet<JoinedGroupPacket> {
     @Override
     public JoinedGroupPacket fromBytes(PacketBuffer buf) {
         if (buf.readBoolean()) {
-            group = buf.readUniqueId();
+            group = buf.readUuid();
         }
         wrongPassword = buf.readBoolean();
         return this;
@@ -50,7 +50,7 @@ public class JoinedGroupPacket implements Packet<JoinedGroupPacket> {
     public void toBytes(PacketBuffer buf) {
         buf.writeBoolean(group != null);
         if (group != null) {
-            buf.writeUniqueId(group);
+            buf.writeUuid(group);
         }
         buf.writeBoolean(wrongPassword);
     }

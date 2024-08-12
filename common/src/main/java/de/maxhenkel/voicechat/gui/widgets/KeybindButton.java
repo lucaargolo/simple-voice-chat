@@ -1,11 +1,9 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
@@ -16,10 +14,10 @@ public class KeybindButton extends ButtonBase {
 
     protected KeyBinding keyMapping;
     @Nullable
-    protected ITextComponent description;
+    protected IChatComponent description;
     protected boolean listening;
 
-    public KeybindButton(int id, KeyBinding mapping, int x, int y, int width, int height, @Nullable ITextComponent description) {
+    public KeybindButton(int id, KeyBinding mapping, int x, int y, int width, int height, @Nullable IChatComponent description) {
         super(id, x, y, width, height, "");
         this.keyMapping = mapping;
         this.description = description;
@@ -31,22 +29,22 @@ public class KeybindButton extends ButtonBase {
     }
 
     protected void updateText() {
-        ITextComponent text;
+        IChatComponent text;
         if (listening) {
-            text = new TextComponentString("> ").appendSibling(getText(keyMapping).setStyle(new Style().setColor(TextFormatting.BOLD).setColor(TextFormatting.UNDERLINE))).appendText(" <").setStyle(new Style().setColor(TextFormatting.YELLOW));
+            text = new ChatComponentText("> ").appendSibling(getText(keyMapping).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.BOLD).setColor(EnumChatFormatting.UNDERLINE))).appendText(" <").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW));
         } else {
             text = getText(keyMapping);
         }
 
         if (description != null) {
-            text = new TextComponentString("").appendSibling(description).appendText(": ").appendSibling(text);
+            text = new ChatComponentText("").appendSibling(description).appendText(": ").appendSibling(text);
         }
 
         displayString = text.getFormattedText();
     }
 
-    private static ITextComponent getText(KeyBinding keyMapping) {
-        return new TextComponentString(keyMapping.getDisplayName());
+    private static IChatComponent getText(KeyBinding keyMapping) {
+        return new ChatComponentText(GameSettings.getKeyDisplayString(keyMapping.getKeyCode()));
     }
 
     public boolean isHovered() {

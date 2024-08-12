@@ -4,20 +4,20 @@ import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import de.maxhenkel.voicechat.voice.client.MicrophoneActivationType;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 
 public class ActivationOnboardingScreen extends OnboardingScreenBase {
 
-    private static final ITextComponent TITLE = new TextComponentTranslation("message.voicechat.onboarding.activation.title").setStyle(new Style().setBold(true));
-    private static final ITextComponent DESCRIPTION = new TextComponentTranslation("message.voicechat.onboarding.activation")
+    private static final IChatComponent TITLE = new ChatComponentTranslation("message.voicechat.onboarding.activation.title").setChatStyle(new ChatStyle().setBold(true));
+    private static final IChatComponent DESCRIPTION = new ChatComponentTranslation("message.voicechat.onboarding.activation")
             .appendText("\n\n")
-            .appendSibling(new TextComponentTranslation("message.voicechat.onboarding.activation.ptt", new TextComponentTranslation("message.voicechat.onboarding.activation.ptt.name").setStyle(new Style().setBold(true).setUnderlined(true))))
+            .appendSibling(new ChatComponentTranslation("message.voicechat.onboarding.activation.ptt", new ChatComponentTranslation("message.voicechat.onboarding.activation.ptt.name").setChatStyle(new ChatStyle().setBold(true).setUnderlined(true))))
             .appendText("\n\n")
-            .appendSibling(new TextComponentTranslation("message.voicechat.onboarding.activation.voice", new TextComponentTranslation("message.voicechat.onboarding.activation.voice.name").setStyle(new Style().setBold(true).setUnderlined(true))));
+            .appendSibling(new ChatComponentTranslation("message.voicechat.onboarding.activation.voice", new ChatComponentTranslation("message.voicechat.onboarding.activation.voice.name").setChatStyle(new ChatStyle().setBold(true).setUnderlined(true))));
 
     public ActivationOnboardingScreen(@Nullable GuiScreen previous) {
         super(TITLE, previous);
@@ -27,7 +27,7 @@ public class ActivationOnboardingScreen extends OnboardingScreenBase {
     public void initGui() {
         super.initGui();
 
-        ButtonBase ptt = new ButtonBase(0, guiLeft, guiTop + contentHeight - BUTTON_HEIGHT * 2 - PADDING, contentWidth / 2 - PADDING / 2, BUTTON_HEIGHT, new TextComponentTranslation("message.voicechat.onboarding.activation.ptt.name")) {
+        ButtonBase ptt = new ButtonBase(0, guiLeft, guiTop + contentHeight - BUTTON_HEIGHT * 2 - PADDING, contentWidth / 2 - PADDING / 2, BUTTON_HEIGHT, new ChatComponentTranslation("message.voicechat.onboarding.activation.ptt.name")) {
             @Override
             public void onPress() {
                 VoicechatClient.CLIENT_CONFIG.microphoneActivationType.set(MicrophoneActivationType.PTT).save();
@@ -36,7 +36,7 @@ public class ActivationOnboardingScreen extends OnboardingScreenBase {
         };
         addButton(ptt);
 
-        ButtonBase voice = new ButtonBase(1, guiLeft + contentWidth / 2 + PADDING / 2, guiTop + contentHeight - BUTTON_HEIGHT * 2 - PADDING, contentWidth / 2 - PADDING / 2, BUTTON_HEIGHT, new TextComponentTranslation("message.voicechat.onboarding.activation.voice.name")) {
+        ButtonBase voice = new ButtonBase(1, guiLeft + contentWidth / 2 + PADDING / 2, guiTop + contentHeight - BUTTON_HEIGHT * 2 - PADDING, contentWidth / 2 - PADDING / 2, BUTTON_HEIGHT, new ChatComponentTranslation("message.voicechat.onboarding.activation.voice.name")) {
             @Override
             public void onPress() {
                 VoicechatClient.CLIENT_CONFIG.microphoneActivationType.set(MicrophoneActivationType.VOICE).save();

@@ -16,17 +16,16 @@ import java.util.regex.Pattern;
 public abstract class Voicechat {
 
     public static final String MODID = "voicechat";
-    public static VoicechatLogger LOGGER;
+    public static VoicechatLogger LOGGER = new Log4JVoicechatLogger(MODID);;
     public static ServerVoiceEvents SERVER;
     public static ServerConfig SERVER_CONFIG;
     public static Translations TRANSLATIONS;
 
-    public static int COMPATIBILITY_VERSION = BuildConstants.COMPATIBILITY_VERSION;
+    public static int COMPATIBILITY_VERSION = 18;
 
     public static final Pattern GROUP_REGEX = Pattern.compile("^[^\\n\\r\\t\\s][^\\n\\r\\t]{0,23}$");
 
     public void initialize() {
-        LOGGER = new Log4JVoicechatLogger(MODID);
         if (debugMode()) {
             LOGGER.warn("Running in debug mode - Don't leave this enabled in production!");
         }
@@ -46,7 +45,9 @@ public abstract class Voicechat {
     }
 
     public static boolean debugMode() {
-        return CommonCompatibilityManager.INSTANCE.isDevEnvironment() || System.getProperty("voicechat.debug") != null;
+        return false;
+        //TODO:
+        //CommonCompatibilityManager.INSTANCE.isDevEnvironment() || System.getProperty("voicechat.debug") != null;
     }
 
     public static Path getModConfigFolder() {

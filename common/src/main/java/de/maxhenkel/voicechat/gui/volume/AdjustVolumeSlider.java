@@ -1,12 +1,12 @@
 package de.maxhenkel.voicechat.gui.volume;
 
 import de.maxhenkel.voicechat.gui.widgets.DebouncedSlider;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class AdjustVolumeSlider extends DebouncedSlider {
 
-    protected static final ITextComponent MUTED = new TextComponentTranslation("message.voicechat.muted");
+    protected static final IChatComponent MUTED = new ChatComponentTranslation("message.voicechat.muted");
 
     protected static final float MAXIMUM = 4F;
 
@@ -21,11 +21,11 @@ public class AdjustVolumeSlider extends DebouncedSlider {
     @Override
     protected void updateMessage() {
         if (value <= 0D) {
-            displayString = MUTED.getUnformattedComponentText();
+            displayString = MUTED.getUnformattedText();
             return;
         }
         long amp = Math.round(value * MAXIMUM * 100F - 100F);
-        displayString = new TextComponentTranslation("message.voicechat.volume_amplification", (amp > 0F ? "+" : "") + amp + "%").getUnformattedComponentText();
+        displayString = new ChatComponentTranslation("message.voicechat.volume_amplification", (amp > 0F ? "+" : "") + amp + "%").getUnformattedText();
     }
 
     @Override

@@ -6,7 +6,6 @@ import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
 import de.maxhenkel.voicechat.voice.client.SoundManager;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -36,7 +35,7 @@ public class AudioDeviceList extends ListScreenListBase<AudioDeviceEntry> {
             if (!entry.isSelected()) {
                 continue;
             }
-            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.F));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.F));
             onSelect(entry);
             return true;
         }

@@ -37,8 +37,8 @@ public class AudioDeviceEntry extends ListScreenEntryBase {
     }
 
     @Override
-    public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
-        super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, hovered, partialTicks);
+    public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean hovered) {
+        super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, hovered);
         boolean selected = isSelected.get();
         if (selected) {
             GuiScreen.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL_SELECTED);
@@ -58,15 +58,15 @@ public class AudioDeviceEntry extends ListScreenEntryBase {
             GuiScreen.drawModalRectWithCustomSizedTexture(x + PADDING, y + slotHeight / 2 - 8, 16, 16, 16, 16, 16, 16);
         }
 
-        float deviceWidth = minecraft.fontRenderer.getStringWidth(visibleDeviceName);
+        float deviceWidth = minecraft.fontRendererObj.getStringWidth(visibleDeviceName);
         float space = listWidth - PADDING - 16 - PADDING - PADDING;
         float scale = Math.min(space / deviceWidth, 1F);
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + PADDING + 16 + PADDING, y + slotHeight / 2 - (minecraft.fontRenderer.FONT_HEIGHT * scale) / 2, 0D);
+        GlStateManager.translate(x + PADDING + 16 + PADDING, y + slotHeight / 2 - (minecraft.fontRendererObj.FONT_HEIGHT * scale) / 2, 0D);
         GlStateManager.scale(scale, scale, 1F);
 
-        minecraft.fontRenderer.drawString(visibleDeviceName, 0, 0, DEVICE_NAME_COLOR);
+        minecraft.fontRendererObj.drawString(visibleDeviceName, 0, 0, DEVICE_NAME_COLOR);
         GlStateManager.popMatrix();
     }
 

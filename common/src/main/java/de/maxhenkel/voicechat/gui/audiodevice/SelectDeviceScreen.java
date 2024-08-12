@@ -6,10 +6,10 @@ import de.maxhenkel.voicechat.gui.VoiceChatScreenBase;
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import de.maxhenkel.voicechat.gui.widgets.IngameListScreenBase;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public abstract class SelectDeviceScreen extends IngameListScreenBase {
 
     protected static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID, "textures/gui/gui_audio_devices.png");
-    protected static final ITextComponent BACK = new TextComponentTranslation("message.voicechat.back");
+    protected static final IChatComponent BACK = new ChatComponentTranslation("message.voicechat.back");
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 32;
@@ -30,7 +30,7 @@ public abstract class SelectDeviceScreen extends IngameListScreenBase {
     protected ButtonBase back;
     protected int units;
 
-    public SelectDeviceScreen(ITextComponent title, @Nullable GuiScreen parent) {
+    public SelectDeviceScreen(IChatComponent title, @Nullable GuiScreen parent) {
         super(title, 236, 0);
         this.parent = parent;
     }
@@ -39,7 +39,7 @@ public abstract class SelectDeviceScreen extends IngameListScreenBase {
 
     public abstract ResourceLocation getIcon();
 
-    public abstract ITextComponent getEmptyListComponent();
+    public abstract IChatComponent getEmptyListComponent();
 
     public abstract ConfigEntry<String> getConfigEntry();
 
@@ -48,7 +48,7 @@ public abstract class SelectDeviceScreen extends IngameListScreenBase {
         super.initGui();
         guiLeft = guiLeft + 2;
         guiTop = 32;
-        int minUnits = MathHelper.ceil((float) (AudioDeviceList.CELL_HEIGHT + 4) / (float) UNIT_SIZE);
+        int minUnits = MathHelper.ceiling_float_int((float) (AudioDeviceList.CELL_HEIGHT + 4) / (float) UNIT_SIZE);
         units = Math.max(minUnits, (height - HEADER_SIZE - FOOTER_SIZE - guiTop * 2) / UNIT_SIZE);
         ySize = HEADER_SIZE + units * UNIT_SIZE + FOOTER_SIZE;
 
@@ -81,9 +81,9 @@ public abstract class SelectDeviceScreen extends IngameListScreenBase {
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        fontRenderer.drawString(title.getUnformattedComponentText(), width / 2 - fontRenderer.getStringWidth(title.getUnformattedComponentText()) / 2, guiTop + 5, isIngame() ? VoiceChatScreenBase.FONT_COLOR : 0xFFFFFF);
+        fontRendererObj.drawString(title.getUnformattedText(), width / 2 - fontRendererObj.getStringWidth(title.getUnformattedText()) / 2, guiTop + 5, isIngame() ? VoiceChatScreenBase.FONT_COLOR : 0xFFFFFF);
         if (deviceList == null || deviceList.isEmpty()) {
-            drawCenteredString(fontRenderer, getEmptyListComponent().getUnformattedComponentText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRenderer.FONT_HEIGHT / 2, -1);
+            drawCenteredString(fontRendererObj, getEmptyListComponent().getUnformattedText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRendererObj.FONT_HEIGHT / 2, -1);
         }
     }
 

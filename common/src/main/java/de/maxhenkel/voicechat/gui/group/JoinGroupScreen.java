@@ -9,23 +9,17 @@ import de.maxhenkel.voicechat.net.JoinGroupPacket;
 import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.*;
 
 import java.io.IOException;
 
 public class JoinGroupScreen extends IngameListScreenBase {
 
     protected static final ResourceLocation TEXTURE = new ResourceLocation(Voicechat.MODID, "textures/gui/gui_join_group.png");
-    protected static final ITextComponent TITLE = new TextComponentTranslation("gui.voicechat.join_create_group.title");
-    protected static final ITextComponent CREATE_GROUP = new TextComponentTranslation("message.voicechat.create_group_button");
-    protected static final ITextComponent JOIN_CREATE_GROUP = new TextComponentTranslation("message.voicechat.join_create_group");
-    protected static final ITextComponent NO_GROUPS = new TextComponentTranslation("message.voicechat.no_groups").setStyle(new Style().setColor(TextFormatting.GRAY));
+    protected static final IChatComponent TITLE = new ChatComponentTranslation("gui.voicechat.join_create_group.title");
+    protected static final IChatComponent CREATE_GROUP = new ChatComponentTranslation("message.voicechat.create_group_button");
+    protected static final IChatComponent JOIN_CREATE_GROUP = new ChatComponentTranslation("message.voicechat.join_create_group");
+    protected static final IChatComponent NO_GROUPS = new ChatComponentTranslation("message.voicechat.no_groups").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY));
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 32;
@@ -45,7 +39,7 @@ public class JoinGroupScreen extends IngameListScreenBase {
         super.initGui();
         guiLeft = guiLeft + 2;
         guiTop = 32;
-        int minUnits = MathHelper.ceil((float) (CELL_HEIGHT + 4) / (float) UNIT_SIZE);
+        int minUnits = MathHelper.ceiling_float_int((float) (CELL_HEIGHT + 4) / (float) UNIT_SIZE);
         units = Math.max(minUnits, (height - HEADER_SIZE - FOOTER_SIZE - guiTop * 2) / UNIT_SIZE);
         ySize = HEADER_SIZE + units * UNIT_SIZE + FOOTER_SIZE;
 
@@ -74,12 +68,12 @@ public class JoinGroupScreen extends IngameListScreenBase {
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        fontRenderer.drawString(JOIN_CREATE_GROUP.getFormattedText(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(JOIN_CREATE_GROUP.getUnformattedComponentText()) / 2, guiTop + 5, FONT_COLOR);
+        fontRendererObj.drawString(JOIN_CREATE_GROUP.getFormattedText(), guiLeft + xSize / 2 - fontRendererObj.getStringWidth(JOIN_CREATE_GROUP.getUnformattedText()) / 2, guiTop + 5, FONT_COLOR);
 
         if (groupList != null && !groupList.isEmpty()) {
             groupList.drawScreen(mouseX, mouseY, delta);
         } else {
-            drawCenteredString(fontRenderer, NO_GROUPS.getUnformattedComponentText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRenderer.FONT_HEIGHT / 2, -1);
+            drawCenteredString(fontRendererObj, NO_GROUPS.getUnformattedText(), width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - fontRendererObj.FONT_HEIGHT / 2, -1);
         }
     }
 
@@ -92,7 +86,7 @@ public class JoinGroupScreen extends IngameListScreenBase {
         for (JoinGroupEntry entry : groupList.children()) {
             if (entry.isSelected()) {
                 ClientGroup group = entry.getGroup().getGroup();
-                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.F));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.F));
                 if (group.hasPassword()) {
                     mc.displayGuiScreen(new EnterPasswordScreen(group));
                 } else {

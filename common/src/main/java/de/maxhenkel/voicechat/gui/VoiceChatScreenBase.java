@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.gui;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IChatComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public abstract class VoiceChatScreenBase extends ScreenBase {
     protected int xSize;
     protected int ySize;
 
-    protected VoiceChatScreenBase(ITextComponent title, int xSize, int ySize) {
+    protected VoiceChatScreenBase(IChatComponent title, int xSize, int ySize) {
         super(title);
         this.xSize = xSize;
         this.ySize = ySize;

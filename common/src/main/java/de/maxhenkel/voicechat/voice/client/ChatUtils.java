@@ -3,45 +3,44 @@ package de.maxhenkel.voicechat.voice.client;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.HoverEvent;
-
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.*;
 import javax.annotation.Nullable;
 
 public class ChatUtils {
 
     public static void sendPlayerError(String translationKey, @Nullable Exception e) {
-        Style style = new Style().setColor(TextFormatting.RED);
+        ChatStyle style = new ChatStyle().setColor(EnumChatFormatting.RED);
         if (e != null) {
-            style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(e.getMessage()).setStyle(new Style().setColor(TextFormatting.RED))));
+            style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(e.getMessage()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))));
         }
-        ITextComponent message = wrapInSquareBrackets(new TextComponentString(CommonCompatibilityManager.INSTANCE.getModName()))
-                .setStyle(new Style().setColor(TextFormatting.GREEN))
+        IChatComponent message = wrapInSquareBrackets(new ChatComponentText(CommonCompatibilityManager.INSTANCE.getModName()))
+                .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))
                 .appendText(" ")
-                .appendSibling(new TextComponentTranslation(translationKey).setStyle(style));
+                .appendSibling(new ChatComponentTranslation(translationKey).setChatStyle(style));
         sendPlayerMessage(message);
     }
 
-    private static ITextComponent wrapInSquareBrackets(ITextComponent component) {
-        return new TextComponentString("[").appendSibling(component).appendText("]");
+    private static IChatComponent wrapInSquareBrackets(IChatComponent component) {
+        return new ChatComponentText("[").appendSibling(component).appendText("]");
     }
 
-    public static void sendModMessage(ITextComponent message) {
+    public static void sendModMessage(IChatComponent message) {
         sendPlayerMessage(createModMessage(message));
     }
 
-    public static ITextComponent createModMessage(ITextComponent message) {
-        return new TextComponentString("")
-                .appendSibling(wrapInSquareBrackets(new TextComponentString(CommonCompatibilityManager.INSTANCE.getModName())).setStyle(new Style().setColor(TextFormatting.GREEN)))
+    public static IChatComponent createModMessage(IChatComponent message) {
+        return new ChatComponentText("")
+                .appendSibling(wrapInSquareBrackets(new ChatComponentText(CommonCompatibilityManager.INSTANCE.getModName())).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)))
                 .appendText(" ")
                 .appendSibling(message);
     }
 
-    public static void sendPlayerMessage(ITextComponent component) {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+    public static void sendPlayerMessage(IChatComponent component) {
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         if (player == null) {
             return;
         }
-        player.sendMessage(component);
+        player.addChatMessage(component);
     }
 }

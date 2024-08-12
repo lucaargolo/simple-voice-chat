@@ -7,14 +7,15 @@ import de.maxhenkel.voicechat.intercompatibility.ClientCompatibilityManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
 
@@ -107,7 +108,7 @@ public class RenderEvents {
             return;
         }
         EntityPlayer player = (EntityPlayer) entity;
-        if (entity == minecraft.player) {
+        if (entity == minecraft.thePlayer) {
             return;
         }
 
@@ -139,7 +140,7 @@ public class RenderEvents {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y + height, z);
-        GlStateManager.glNormal3f(0F, 1F, 0F);
+        GL11.glNormal3f(0F, 1F, 0F);
         GlStateManager.rotate(-renderManager.playerViewY, 0F, 1F, 0F);
         GlStateManager.rotate((float) (isThirdPersonFrontal ? -1 : 1) * renderManager.playerViewX, 1F, 0F, 0F);
         GlStateManager.scale(-0.025F, -0.025F, 0.025F);
@@ -151,8 +152,8 @@ public class RenderEvents {
         }
 
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        int halfNameWidth = minecraft.fontRenderer.getStringWidth(str) / 2;
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        int halfNameWidth = minecraft.fontRendererObj.getStringWidth(str) / 2;
         GlStateManager.translate(halfNameWidth, verticalShift - 1F, 0F);
         if (!entity.isSneaking()) {
             drawIcon(texture, true);
@@ -170,7 +171,7 @@ public class RenderEvents {
     private void drawIcon(ResourceLocation texture, boolean transparent) {
         minecraft.getTextureManager().bindTexture(texture);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        WorldRenderer bufferbuilder = tessellator.getWorldRenderer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         bufferbuilder.pos(2D, 10D, 0D).tex(0D, 1D).color(255, 255, 255, transparent ? 32 : 255).endVertex();
         bufferbuilder.pos(2D + 10D, 10D, 0D).tex(1D, 1D).color(255, 255, 255, transparent ? 32 : 255).endVertex();

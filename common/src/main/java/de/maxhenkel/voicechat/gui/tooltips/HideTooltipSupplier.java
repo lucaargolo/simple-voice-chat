@@ -3,7 +3,8 @@ package de.maxhenkel.voicechat.gui.tooltips;
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.gui.widgets.ImageButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ public class HideTooltipSupplier implements ImageButton.TooltipSupplier {
         List<String> tooltip = new ArrayList<>();
 
         if (VoicechatClient.CLIENT_CONFIG.hideIcons.get()) {
-            tooltip.add(new TextComponentTranslation("message.voicechat.hide_icons.enabled").getUnformattedComponentText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.hide_icons.enabled").getUnformattedText());
         } else {
-            tooltip.add(new TextComponentTranslation("message.voicechat.hide_icons.disabled").getUnformattedComponentText());
+            tooltip.add(new ChatComponentTranslation("message.voicechat.hide_icons.disabled").getUnformattedText());
         }
 
-        screen.drawHoveringText(tooltip, mouseX, mouseY);
+        GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, screen.width, screen.height, -1, screen.mc.fontRendererObj);
     }
 
 }

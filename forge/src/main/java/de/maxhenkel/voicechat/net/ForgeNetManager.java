@@ -21,7 +21,7 @@ public class ForgeNetManager extends NetManager {
                         }
                         T vcPacket = packetType.getDeclaredConstructor().newInstance();
                         vcPacket.fromBytes(packet.getBufferData());
-                        c.onServerPacket(player.mcServer, player, player.connection, vcPacket);
+                        c.onServerPacket(player.mcServer, player, player.playerNetServerHandler, vcPacket);
                     } catch (Exception e) {
                         Voicechat.LOGGER.error("Failed to process packet", e);
                     }
@@ -47,7 +47,7 @@ public class ForgeNetManager extends NetManager {
 
     @SideOnly(Side.CLIENT)
     private <T extends Packet<T>> void onClientPacket(Channel<T> channel, T packet) {
-        channel.onClientPacket(Minecraft.getMinecraft(), Minecraft.getMinecraft().getConnection(), packet);
+        channel.onClientPacket(Minecraft.getMinecraft(), Minecraft.getMinecraft().getNetHandler(), packet);
     }
 
 }

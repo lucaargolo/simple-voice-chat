@@ -6,9 +6,10 @@ import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.KeyEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 
 import javax.annotation.Nullable;
 
@@ -40,8 +41,8 @@ public class OnboardingManager {
         if (!isOnboarding()) {
             return;
         }
-        ChatUtils.sendModMessage(new TextComponentTranslation("message.voicechat.set_up",
-                new TextComponentString(KeyEvents.KEY_VOICE_CHAT.getDisplayName()).setStyle(new Style().setBold(true).setUnderlined(true))
+        ChatUtils.sendModMessage(new ChatComponentTranslation("message.voicechat.set_up",
+                new ChatComponentText(GameSettings.getKeyDisplayString(KeyEvents.KEY_VOICE_CHAT.getKeyCode())).setChatStyle(new ChatStyle().setBold(true).setUnderlined(true))
         ));
     }
 }

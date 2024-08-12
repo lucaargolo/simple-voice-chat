@@ -15,7 +15,7 @@ import de.maxhenkel.voicechat.voice.server.Group;
 import de.maxhenkel.voicechat.voice.server.Server;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -317,7 +317,7 @@ public class PluginManager {
         return clientSoundEvent.getRawAudio();
     }
 
-    public short[] onReceiveLocationalClientSound(UUID id, short[] rawAudio, Vec3d pos, float distance) {
+    public short[] onReceiveLocationalClientSound(UUID id, short[] rawAudio, Vec3 pos, float distance) {
         ClientReceiveSoundEventImpl.LocationalSoundImpl clientSoundEvent = new ClientReceiveSoundEventImpl.LocationalSoundImpl(id, rawAudio, new PositionImpl(pos), distance);
         dispatchEvent(ClientReceiveSoundEvent.LocationalSound.class, clientSoundEvent);
         return clientSoundEvent.getRawAudio();
@@ -329,7 +329,7 @@ public class PluginManager {
         return clientSoundEvent.getRawAudio();
     }
 
-    public void onALSound(int source, @Nullable UUID channelId, @Nullable Vec3d pos, @Nullable String category, Class<? extends OpenALSoundEvent> eventClass) {
+    public void onALSound(int source, @Nullable UUID channelId, @Nullable Vec3 pos, @Nullable String category, Class<? extends OpenALSoundEvent> eventClass) {
         dispatchEvent(eventClass, new OpenALSoundEventImpl(
                 channelId,
                 pos == null ? null : new PositionImpl(pos),
